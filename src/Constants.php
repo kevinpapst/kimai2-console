@@ -19,4 +19,12 @@ class Constants
      * The software name
      */
     public const SOFTWARE = 'Kimai 2 - Remote Console';
+    /**
+     * The actual git commit
+     */
+    public const GIT = '@git-commit-short@';
+    /**
+     * The actual date when this phar was created
+     */
+    public const DATE = '@release-date@';
 }

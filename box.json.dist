@@ -1,0 +1,35 @@
+{
+    "check-requirements": false,
+    "dump-autoload": false,
+    "stub": "bin/kimai",
+    "main": false,
+    "output": "kimai.phar",
+    "compactors": [
+        "KevinGH\\Box\\Compactor\\Json",
+        "KevinGH\\Box\\Compactor\\Php"
+    ],
+    "files": [
+        "LICENSE"
+    ],
+    "finder": [
+        {
+            "name": [
+                "*.php"
+            ],
+            "exclude": [
+                "Test",
+                "test",
+                "Tests",
+                "tests"
+            ],
+            "in": [
+                "src",
+                "vendor"
+            ]
+        }
+    ],
+    "compression": "GZ",
+    "git-commit": "git-commit",
+    "git-commit-short": "git-commit-short",
+    "datetime": "release-date"
+}

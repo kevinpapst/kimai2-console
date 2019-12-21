@@ -33,6 +33,11 @@ class Application extends SymfonyApplication
         parent::__construct(Constants::SOFTWARE, Constants::VERSION);
     }
 
+    public function getLongVersion()
+    {
+        return sprintf('<info>%s</info> version <comment>%s</comment> %s (#%s)', $this->getName(), $this->getVersion(), Constants::DATE, Constants::GIT);
+    }
+
     /**
      * {@inheritdoc}
      */

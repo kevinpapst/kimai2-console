@@ -2,23 +2,56 @@
 <?php
 
 if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
-}
-
-setlocale(LC_ALL, 'C');
-
-if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
-    echo 'You must set up the project dependencies using `composer install`'.PHP_EOL.
-        'See https://getcomposer.org/download/ for instructions on installing Composer'.PHP_EOL;
+    fwrite(STDERR, 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL);
     exit(1);
 }
 
+foreach (['json', 'iconv'] as $extension) {
+    if (!extension_loaded($extension)) {
+        fwrite(STDERR, sprintf("PHP extension ext-%s is missing from your system. Install or enable it.\n", $extension));
+        exit(1);
+    }
+}
+unset($extension);
+
+setlocale(LC_ALL, 'C');
+
+// -------------------------- AUTOLOAD --------------------------
+$require = true;
+if (class_exists('Phar')) {
+    // Maybe this file is used as phar-stub? Let's try!
+    try {
+        Phar::mapPhar('kimai.phar');
+        require_once 'phar://kimai.phar/vendor/autoload.php';
+        $require = false;
+    } catch (PharException $e) {
+    }
+}
+if ($require) {
+    // OK, it's not, let give Composer autoloader a try!
+    $possibleFiles = [__DIR__.'/../../../autoload.php', __DIR__.'/../../autoload.php', __DIR__.'/../vendor/autoload.php'];
+    $file = null;
+    foreach ($possibleFiles as $possibleFile) {
+        if (file_exists($possibleFile)) {
+            $file = $possibleFile;
+            break;
+        }
+    }
+
+    if (null === $file) {
+        fwrite(STDERR, "Unable to locate autoload.php file, you must set up the project dependencies using `composer install`.\n");
+        exit(1);
+    }
+
+    require_once $file;
+    unset($possibleFiles, $possibleFile, $file);
+}
+unset($require);
+// -------------------------- AUTOLOAD --------------------------
+
 set_time_limit(0);
 
-require dirname(__DIR__).'/vendor/autoload.php';
-
 use KimaiConsole\Application;
-use KimaiConsole\Constants;
 
 if (function_exists('ini_set')) {
     @ini_set('display_errors', 1);
@@ -52,3 +85,5 @@ putenv('KIMAI_BINARY='.realpath($_SERVER['argv'][0]));
 
 $application = new Application();
 $application->run();
+
+__HALT_COMPILER();
