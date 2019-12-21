@@ -1,0 +1,54 @@
+#!/usr/bin/env php
+<?php
+
+if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
+}
+
+setlocale(LC_ALL, 'C');
+
+if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
+    echo 'You must set up the project dependencies using `composer install`'.PHP_EOL.
+        'See https://getcomposer.org/download/ for instructions on installing Composer'.PHP_EOL;
+    exit(1);
+}
+
+set_time_limit(0);
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+use KimaiConsole\Application;
+use KimaiConsole\Constants;
+
+if (function_exists('ini_set')) {
+    @ini_set('display_errors', 1);
+    $memoryInBytes = function ($value) {
+        $unit = strtolower(substr($value, -1, 1));
+        $value = (int) $value;
+        switch($unit) {
+            case 'g':
+                $value *= 1024;
+            // no break (cumulative multiplier)
+            case 'm':
+                $value *= 1024;
+            // no break (cumulative multiplier)
+            case 'k':
+                $value *= 1024;
+        }
+        return $value;
+    };
+    $memoryLimit = trim(ini_get('memory_limit'));
+    // Increase memory_limit if it is lower than 1.5GB
+    if ($memoryLimit != -1 && $memoryInBytes($memoryLimit) < 1024 * 1024 * 1536) {
+        @ini_set('memory_limit', '1536M');
+    }
+    // Set user defined memory limit
+    if ($memoryLimit = getenv('KIMAI_MEMORY_LIMIT')) {
+        @ini_set('memory_limit', $memoryLimit);
+    }
+    unset($memoryInBytes, $memoryLimit);
+}
+putenv('KIMAI_BINARY='.realpath($_SERVER['argv'][0]));
+
+$application = new Application();
+$application->run();
