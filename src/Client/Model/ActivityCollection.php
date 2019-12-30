@@ -59,6 +59,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'float',
         'hourly_rate' => 'float',
         'color' => 'string',
+        'parent_title' => 'string',
         'project' => 'int',
         'meta_fields' => '\KimaiConsole\Client\Model\ActivityMeta[]'
     ];
@@ -75,6 +76,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'float',
         'hourly_rate' => 'float',
         'color' => null,
+        'parent_title' => null,
         'project' => null,
         'meta_fields' => null
     ];
@@ -112,6 +114,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'fixedRate',
         'hourly_rate' => 'hourlyRate',
         'color' => 'color',
+        'parent_title' => 'parentTitle',
         'project' => 'project',
         'meta_fields' => 'metaFields'
     ];
@@ -128,6 +131,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'setFixedRate',
         'hourly_rate' => 'setHourlyRate',
         'color' => 'setColor',
+        'parent_title' => 'setParentTitle',
         'project' => 'setProject',
         'meta_fields' => 'setMetaFields'
     ];
@@ -144,6 +148,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'getFixedRate',
         'hourly_rate' => 'getHourlyRate',
         'color' => 'getColor',
+        'parent_title' => 'getParentTitle',
         'project' => 'getProject',
         'meta_fields' => 'getMetaFields'
     ];
@@ -210,6 +215,7 @@ class ActivityCollection implements ModelInterface, ArrayAccess
         $this->container['fixed_rate'] = $data['fixed_rate'] ?? null;
         $this->container['hourly_rate'] = $data['hourly_rate'] ?? null;
         $this->container['color'] = $data['color'] ?? null;
+        $this->container['parent_title'] = $data['parent_title'] ?? null;
         $this->container['project'] = $data['project'] ?? null;
         $this->container['meta_fields'] = $data['meta_fields'] ?? null;
     }
@@ -399,6 +405,30 @@ class ActivityCollection implements ModelInterface, ArrayAccess
     public function setColor($color)
     {
         $this->container['color'] = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets parent_title
+     *
+     * @return string
+     */
+    public function getParentTitle()
+    {
+        return $this->container['parent_title'];
+    }
+
+    /**
+     * Sets parent_title
+     *
+     * @param string $parent_title parent_title
+     *
+     * @return $this
+     */
+    public function setParentTitle($parent_title)
+    {
+        $this->container['parent_title'] = $parent_title;
 
         return $this;
     }

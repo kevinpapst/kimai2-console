@@ -53,9 +53,9 @@ final class ActivityListCommand extends BaseCommand
 
         $rows = [];
         foreach ($collection as $activity) {
-            $project = '-';
-            if (null !== ($prj = $activity->getProject())) {
-                $project = $prj;
+            $project = '';
+            if (!empty($activity->getProject())) {
+                $project = '[' . $activity->getProject() . '] ' . $activity->getParentTitle();
             }
             $rows[] = [
                 $activity->getId(),

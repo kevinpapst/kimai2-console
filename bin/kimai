@@ -1,6 +1,13 @@
 #!/usr/bin/env php
 <?php
 
+/*
+ * This file is part of the Kimai 2 - Remote Console.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     fwrite(STDERR, 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL);
     exit(1);

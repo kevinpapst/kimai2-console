@@ -14,7 +14,7 @@ class Constants
     /**
      * The current release version
      */
-    public const VERSION = '0.1';
+    public const VERSION = '0.1.1';
     /**
      * The software name
      */

@@ -83,12 +83,13 @@ class Application extends SymfonyApplication
             new Command\ActivityListCommand(),
             new Command\ProjectListCommand(),
             new Command\CustomerListCommand(),
-            new Command\DumpConfigurationCommand(),
+            new Command\ConfigurationCreateCommand(),
             new Command\VersionCommand(),
         ]);
 
         if ('phar:' === substr(__FILE__, 0, 5)) {
-            $commands[] = new Command\SelfUpdateCommand();
+            // TODO commented, until it is working
+            //$commands[] = new Command\SelfUpdateCommand();
         }
 
         return $commands;

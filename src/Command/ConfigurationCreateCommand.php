@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class DumpConfigurationCommand extends BaseCommand
+final class ConfigurationCreateCommand extends BaseCommand
 {
     /**
      * {@inheritdoc}
@@ -22,8 +22,8 @@ final class DumpConfigurationCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('dump-configuration')
-            ->setDescription('Dumps a default configuration file')
+            ->setName('configuration:create')
+            ->setDescription('Create a default configuration file')
             ->setHelp('This command creates a default configuration file.')
         ;
     }

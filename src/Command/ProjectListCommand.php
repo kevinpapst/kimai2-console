@@ -53,12 +53,10 @@ final class ProjectListCommand extends BaseCommand
 
         $rows = [];
         foreach ($collection as $project) {
-            $customer = $project->getCustomer();
-
             $rows[] = [
                 $project->getId(),
                 $project->getName(),
-                $project->getCustomer(),
+                '[' . $project->getCustomer() . '] '  . $project->getParentTitle(),
             ];
         }
         $io->table(['Id', 'Name', 'Customer ID'], $rows);

@@ -60,6 +60,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         'hourly_rate' => 'float',
         'color' => 'string',
         'customer' => 'int',
+        'parent_title' => 'string',
         'meta_fields' => '\KimaiConsole\Client\Model\ProjectMeta[]'
     ];
 
@@ -75,6 +76,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         'fixed_rate' => 'float',
         'hourly_rate' => 'float',
         'color' => null,
+        'parent_title' => null,
         'customer' => null,
         'meta_fields' => null
     ];
@@ -113,6 +115,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         'hourly_rate' => 'hourlyRate',
         'color' => 'color',
         'customer' => 'customer',
+        'parent_title' => 'parentTitle',
         'meta_fields' => 'metaFields'
     ];
 
@@ -129,6 +132,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         'hourly_rate' => 'setHourlyRate',
         'color' => 'setColor',
         'customer' => 'setCustomer',
+        'parent_title' => 'setParentTitle',
         'meta_fields' => 'setMetaFields'
     ];
 
@@ -145,6 +149,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         'hourly_rate' => 'getHourlyRate',
         'color' => 'getColor',
         'customer' => 'getCustomer',
+        'parent_title' => 'getParentTitle',
         'meta_fields' => 'getMetaFields'
     ];
 
@@ -211,6 +216,7 @@ class ProjectCollection implements ModelInterface, ArrayAccess
         $this->container['hourly_rate'] = $data['hourly_rate'] ?? null;
         $this->container['color'] = $data['color'] ?? null;
         $this->container['customer'] = $data['customer'] ?? null;
+        $this->container['parent_title'] = $data['parent_title'] ?? null;
         $this->container['meta_fields'] = $data['meta_fields'] ?? null;
     }
 
@@ -399,6 +405,30 @@ class ProjectCollection implements ModelInterface, ArrayAccess
     public function setColor($color)
     {
         $this->container['color'] = $color;
+
+        return $this;
+    }
+
+    /**
+     * Gets parent_title
+     *
+     * @return string
+     */
+    public function getParentTitle()
+    {
+        return $this->container['parent_title'];
+    }
+
+    /**
+     * Sets parent_title
+     *
+     * @param string $parent_title parent_title
+     *
+     * @return $this
+     */
+    public function setParentTitle($parent_title)
+    {
+        $this->container['parent_title'] = $parent_title;
 
         return $this;
     }
