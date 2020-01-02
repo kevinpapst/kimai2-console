@@ -56,10 +56,12 @@ final class ProjectListCommand extends BaseCommand
             $rows[] = [
                 $project->getId(),
                 $project->getName(),
-                '[' . $project->getCustomer() . '] '  . $project->getParentTitle(),
+                $project->getCustomer(),
+                $project->getParentTitle(),
             ];
         }
-        $io->table(['Id', 'Name', 'Customer ID'], $rows);
+
+        $this->formatOutput($input, $output, ['Id', 'Name', 'Customer ID', 'Customer Name'], $rows);
 
         return 0;
     }

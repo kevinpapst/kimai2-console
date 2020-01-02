@@ -44,6 +44,8 @@ edit the config file and change the settings: URL, username and API token.
 
 You get a list of all available commands with `kimai`.
 
+- `kimai active` - display all running timesheets
+- `kimai stop` - stop currently active timesheets
 - `kimai customer:list` - show a list of customers
 - `kimai project:list` - show a list of projects
 - `kimai activity:list` - show a list of activities

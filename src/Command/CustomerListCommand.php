@@ -52,7 +52,8 @@ final class CustomerListCommand extends BaseCommand
                 $customer->getName(),
             ];
         }
-        $io->table(['Id', 'Name'], $rows);
+
+        $this->formatOutput($input, $output, ['Id', 'Name'], $rows);
 
         return 0;
     }

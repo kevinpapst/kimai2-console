@@ -15,6 +15,9 @@ use KimaiConsole\Client\Api\DefaultApi;
 use KimaiConsole\Exception\ConnectionProblemException;
 use KimaiConsole\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class BaseCommand extends Command
 {
@@ -44,5 +47,26 @@ abstract class BaseCommand extends Command
         } catch (\Exception $ex) {
             throw new ConnectionProblemException('Failed to connect to API: ' . $ex->getMessage());
         }
+    }
+
+    protected function formatOutput(InputInterface $input, OutputInterface $output, array $headers, array $rows)
+    {
+        $io = new SymfonyStyle($input, $output);
+
+        if (false !== $input->getOption('csv')) {
+            $io->writeln(implode(',', $headers));
+            foreach ($rows as $row) {
+                $io->writeln('"' . implode('","', $row) . '"');
+            }
+
+            return;
+        }
+        /*elseif (false !== $input->getOption('json')) {
+            echo json_encode($rows);
+
+            return;
+        }*/
+
+        $io->table($headers, $rows);
     }
 }

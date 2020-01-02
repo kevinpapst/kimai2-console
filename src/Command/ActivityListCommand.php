@@ -53,17 +53,21 @@ final class ActivityListCommand extends BaseCommand
 
         $rows = [];
         foreach ($collection as $activity) {
-            $project = '';
+            $projectId = '';
+            $projectName = '';
             if (!empty($activity->getProject())) {
-                $project = '[' . $activity->getProject() . '] ' . $activity->getParentTitle();
+                $projectId = $activity->getProject();
+                $projectName = $activity->getParentTitle();
             }
             $rows[] = [
                 $activity->getId(),
                 $activity->getName(),
-                $project
+                $projectId,
+                $projectName,
             ];
         }
-        $io->table(['Id', 'Name', 'Project ID'], $rows);
+
+        $this->formatOutput($input, $output, ['Id', 'Name', 'Project ID', 'Project Name'], $rows);
 
         return 0;
     }

@@ -19,7 +19,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Application extends SymfonyApplication
 {
-
     private static $logo = ' _  _____ __  __    _    ___   ____  
 | |/ /_ _|  \/  |  / \  |_ _| |___ \ 
 | \' / | || |\/| | / _ \  | |    __) |
@@ -80,6 +79,8 @@ class Application extends SymfonyApplication
     protected function getDefaultCommands()
     {
         $commands = array_merge(parent::getDefaultCommands(), [
+            new Command\ActiveCommand(),
+            new Command\StopCommand(),
             new Command\ActivityListCommand(),
             new Command\ProjectListCommand(),
             new Command\CustomerListCommand(),
@@ -87,10 +88,12 @@ class Application extends SymfonyApplication
             new Command\VersionCommand(),
         ]);
 
+        // TODO commented, until it is working
+        /*
         if ('phar:' === substr(__FILE__, 0, 5)) {
-            // TODO commented, until it is working
-            //$commands[] = new Command\SelfUpdateCommand();
+            $commands[] = new Command\SelfUpdateCommand();
         }
+        */
 
         return $commands;
     }
@@ -102,6 +105,8 @@ class Application extends SymfonyApplication
     {
         $definition = parent::getDefaultInputDefinition();
         $definition->addOption(new InputOption('--profile', null, InputOption::VALUE_NONE, 'Display timing and memory usage information'));
+        $definition->addOption(new InputOption('--csv', null, InputOption::VALUE_NONE, 'Render raw data instead of styled tables'));
+        //$definition->addOption(new InputOption('--json', null, InputOption::VALUE_NONE, 'Render JSON data instead of styled tables'));
 
         return $definition;
     }
