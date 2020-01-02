@@ -15,7 +15,7 @@ A PHP application to access your Kimai 2 installation via its API (http).
 To install and update the Kimai console tools, execute the following commands: 
 
 ```bash
-wget curl -LJO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar
+curl -LO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar
 chmod +x kimai.phar
 mv kimai.phar /usr/local/bin/kimai
 ```
@@ -61,5 +61,7 @@ The following environment variables are supported:
 
 ## How to build a release
 
+- Bump version in `src/Constants.php`
 - Execute `box compile`
-- 
+- Prepare a new GitHub release
+- Upload the file `kimai.phar` to the new release
