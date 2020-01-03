@@ -80,6 +80,7 @@ class Application extends SymfonyApplication
     {
         $commands = array_merge(parent::getDefaultCommands(), [
             new Command\ActiveCommand(),
+            new Command\StartCommand(),
             new Command\StopCommand(),
             new Command\ActivityListCommand(),
             new Command\ProjectListCommand(),

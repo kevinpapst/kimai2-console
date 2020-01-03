@@ -46,6 +46,7 @@ You get a list of all available commands with `kimai`.
 
 - `kimai active` - display all running timesheets
 - `kimai stop` - stop currently active timesheets
+- `kimai start` - starts a new timesheet
 - `kimai customer:list` - show a list of customers
 - `kimai project:list` - show a list of projects
 - `kimai activity:list` - show a list of activities
@@ -53,6 +54,41 @@ You get a list of all available commands with `kimai`.
 - `kimai configuration:create` - creates the initial configuration file
 
 To get help for a dedicated command use the `--help` switch, eg: `kimai project:list --help`
+
+### Start a timesheet
+
+This command is rather clever and tries to detect customer, project and activity from your input in the following way:
+
+- if it is a number, then it tries to load the entity by its ID
+  - if a entity is found, it will be used
+- if it is a string, then this is just as search term
+  - if one entity is found, it will be used
+  - if multiple entities are found, a select list is shown
+- if nothing is given or no reult was found in the previous steps, a list of all entities is fetched and shown for selection
+  - this list might be filtered (eg. only activities for found project)
+
+Example to start a new timesheet by search terms only, adding some tags: 
+```
+bin/kimai start --customer Schowalter --project analyzer --activity iterate --tags "test1, bla foo, kljhdflkjh kjh"
+
+ [OK] Started timesheet                                                                                                 
+
+ * ID: 5070
+ * Begin: 2020-01-03T17:39:00+0100
+ * Project: Grass-roots system-worthy analyzer
+ * Activity: iterate viral infomediaries
+```
+
+This example would display a select list for all projects and then a select list for all activities for the chosen project: 
+```
+bin/kimai start
+```
+
+This example would display a select list for all customers, then a filtered list for the projects of the chosen customer and finally a select list for all activities for the chosen project: 
+```
+bin/kimai start --customer
+```
+
 
 ## Environment variables
 
