@@ -67,28 +67,35 @@ This command is rather clever and tries to detect customer, project and activity
 - if nothing is given or no reult was found in the previous steps, a list of all entities is fetched and shown for selection
   - this list might be filtered (eg. only activities for found project)
 
-Example to start a new timesheet by search terms only, adding some tags: 
-```
-bin/kimai start --customer Schowalter --project analyzer --activity iterate --tags "test1, bla foo, kljhdflkjh kjh"
-
- [OK] Started timesheet                                                                                                 
-
- * ID: 5070
- * Begin: 2020-01-03T17:39:00+0100
- * Project: Grass-roots system-worthy analyzer
- * Activity: iterate viral infomediaries
-```
-
-This example would display a select list for all projects and then a select list for all activities for the chosen project: 
+This most simple example will display a select list for all customers, then a filtered list for the projects of the chosen customer and finally a select list for all activities for the chosen project: 
 ```
 bin/kimai start
 ```
 
-This example would display a select list for all customers, then a filtered list for the projects of the chosen customer and finally a select list for all activities for the chosen project: 
+Example to start a new timesheet by search terms only, adding a description and some tags: 
 ```
-bin/kimai start --customer
+bin/kimai start --customer Schowalter --project analyzer --activity iterate --description "working for fun" --tags "test, bla foo, tagging"
+
+ [OK] Started timesheet                                                                                                 
+
+ ------------- ------------------------------------ 
+  ID            5085                                
+  Begin         2020-01-03T23:34:26+0100            
+  Description   working for fun                     
+  Tags          bla foo                             
+                test                                
+                tagging                             
+  Customer      Schowalter PLC                      
+  Project       Grass-roots system-worthy analyzer  
+  Activity      iterate viral infomediaries         
+ ------------- ------------------------------------ 
 ```
 
+### Output format
+
+The `:list`ing commands display a formatted table of all found entities.
+
+If you want to use the output in a script, instead of manually looking at them, please use the `--csv` switch. 
 
 ## Environment variables
 

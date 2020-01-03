@@ -52,10 +52,11 @@ final class ActiveCommand extends BaseCommand
                 $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
                 $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
                 $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
+                $timesheet->getDescription() !== null ? $timesheet->getDescription() : '',
             ];
         }
 
-        $this->formatOutput($input, $output, ['ID', 'Started at', 'Activity', 'Project', 'Customer'], $choices);
+        $this->formatOutput($input, $output, ['ID', 'Started at', 'Activity', 'Project', 'Customer', 'Description'], $choices);
 
         return 0;
     }

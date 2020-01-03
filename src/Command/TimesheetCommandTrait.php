@@ -10,15 +10,12 @@
 namespace KimaiConsole\Command;
 
 use KimaiConsole\Client\Api\DefaultApi;
-use KimaiConsole\Client\Model\Activity;
 use KimaiConsole\Client\Model\ActivityCollection;
-use KimaiConsole\Client\Model\ActivityEntity;
-use KimaiConsole\Client\Model\Customer;
 use KimaiConsole\Client\Model\CustomerCollection;
-use KimaiConsole\Client\Model\CustomerEntity;
-use KimaiConsole\Client\Model\Project;
 use KimaiConsole\Client\Model\ProjectCollection;
-use KimaiConsole\Client\Model\ProjectEntity;
+use KimaiConsole\Entity\Activity;
+use KimaiConsole\Entity\Customer;
+use KimaiConsole\Entity\Project;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -27,7 +24,7 @@ trait TimesheetCommandTrait
 {
     abstract protected function getApi(): DefaultApi;
 
-    private function findCustomer(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $customerId)
+    private function findCustomer(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $customerId): ?Customer
     {
         $api = $this->getApi();
         $customer = null;
@@ -39,7 +36,7 @@ trait TimesheetCommandTrait
             } else {
                 $customerList = $api->apiCustomersGet(true, null, null, $customerId);
                 if (count($customerList) === 1) {
-                    $customer = $this->loadCustomerById($io, $customerList[0]->getId());
+                    $customer = Customer::fromCollection($customerList[0]);
                 } elseif (count($customerList) > 1) {
                     $customer = $this->askForCustomer($io, $customerList);
                 } else {
@@ -63,12 +60,14 @@ trait TimesheetCommandTrait
         return $this->askForCustomer($io, $customerList);
     }
 
-    private function loadCustomerById(SymfonyStyle $io, int $id): ?CustomerEntity
+    private function loadCustomerById(SymfonyStyle $io, int $id): ?Customer
     {
         $api = $this->getApi();
 
         try {
-            return $api->apiCustomersIdGet($id);
+            $customerEntity = $api->apiCustomersIdGet($id);
+
+            return Customer::fromEntity($customerEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
                 $io->error(sprintf('Customer with ID %s does not exist', $id));
@@ -85,24 +84,36 @@ trait TimesheetCommandTrait
      * @param array<CustomerCollection> $customers
      * @return Customer
      */
-    private function askForCustomer(SymfonyStyle $io, array $customers): CustomerEntity
+    private function askForCustomer(SymfonyStyle $io, array $customers): ?Customer
     {
         $choices = [];
-        foreach ($customers as $customer) {
-            $choices[$customer->getId()] = $customer->getName();
+        /** @var CustomerCollection $customerEntity */
+        foreach ($customers as $customerEntity) {
+            $choices[$customerEntity->getId()] = $customerEntity->getName();
         }
 
         $id = $io->choice('Please select a customer', $choices);
 
         $flipped = array_flip($choices);
-        $id = $flipped[$id];
+        $id = intval($flipped[$id]);
 
-        return $this->loadCustomerById($io, intval($id));
+        /** @var CustomerCollection $customerEntity */
+        foreach ($customers as $customerEntity) {
+            if ($customerEntity->getId() !== $id) {
+                continue;
+            }
+
+            return Customer::fromCollection($customerEntity);
+        }
+
+        $io->error('Failed loading customer with ID ' . $id);
+
+        return null;
     }
 
     // ==============================================================================================================
 
-    private function findProject(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $projectId, ?CustomerEntity $customer = null): ?ProjectEntity
+    private function findProject(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $projectId, ?Customer $customer = null): ?Project
     {
         $api = $this->getApi();
         $project = null;
@@ -115,7 +126,7 @@ trait TimesheetCommandTrait
             } else {
                 $projectList = $api->apiProjectsGet($customerId, true, null, null, $projectId);
                 if (count($projectList) === 1) {
-                    $project = $this->loadProjectById($io, $projectList[0]->getId());
+                    $project = Project::fromCollection($projectList[0]);
                 } elseif (count($projectList) > 1) {
                     $project = $this->askForProject($io, $projectList);
                 } else {
@@ -139,12 +150,14 @@ trait TimesheetCommandTrait
         return $this->askForProject($io, $projectList);
     }
 
-    private function loadProjectById(SymfonyStyle $io, int $id): ?ProjectEntity
+    private function loadProjectById(SymfonyStyle $io, int $id): ?Project
     {
         $api = $this->getApi();
 
         try {
-            return $api->apiProjectsIdGet($id);
+            $projectEntity = $api->apiProjectsIdGet($id);
+
+            return Project::fromEntity($projectEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
                 $io->error(sprintf('Project with ID %s does not exist', $id));
@@ -161,25 +174,36 @@ trait TimesheetCommandTrait
      * @param array<ProjectCollection> $projects
      * @return Project
      */
-    private function askForProject(SymfonyStyle $io, array $projects): ProjectEntity
+    private function askForProject(SymfonyStyle $io, array $projects): ?Project
     {
         $choices = [];
-        /** @var ProjectCollection $project */
-        foreach ($projects as $project) {
-            $choices[$project->getId()] = $project->getName();
+        /** @var ProjectCollection $projectEntity */
+        foreach ($projects as $projectEntity) {
+            $choices[$projectEntity->getId()] = $projectEntity->getName();
         }
 
         $id = $io->choice('Please select a project', $choices);
 
         $flipped = array_flip($choices);
-        $id = $flipped[$id];
+        $id = intval($flipped[$id]);
 
-        return $this->loadProjectById($io, intval($id));
+        /** @var ProjectCollection $projectEntity */
+        foreach ($projects as $projectEntity) {
+            if ($projectEntity->getId() !== $id) {
+                continue;
+            }
+
+            return Project::fromCollection($projectEntity);
+        }
+
+        $io->error('Failed loading project with ID ' . $id);
+
+        return null;
     }
 
     // ==============================================================================================================
 
-    private function findActivity(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $activityId, ?ProjectEntity $projectEntity = null): ?ActivityEntity
+    private function findActivity(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $activityId, ?Project $projectEntity = null): ?Activity
     {
         $api = $this->getApi();
         $activity = null;
@@ -192,7 +216,7 @@ trait TimesheetCommandTrait
             } else {
                 $activityList = $api->apiActivitiesGet($projectId, true, 'true', null, null, null, $activityId);
                 if (count($activityList) === 1) {
-                    $activity = $this->loadActivityById($io, $activityList[0]->getId());
+                    $activity = Activity::fromCollection($activityList[0]);
                 } elseif (count($activityList) > 1) {
                     $activity = $this->askForActivity($io, $activityList);
                 } else {
@@ -216,12 +240,14 @@ trait TimesheetCommandTrait
         return $this->askForActivity($io, $activityList);
     }
 
-    private function loadActivityById(SymfonyStyle $io, int $id): ?ActivityEntity
+    private function loadActivityById(SymfonyStyle $io, int $id): ?Activity
     {
         $api = $this->getApi();
 
         try {
-            return $api->apiActivitiesIdGet($id);
+            $activityEntity = $api->apiActivitiesIdGet($id);
+
+            return Activity::fromEntity($activityEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
                 $io->error(sprintf('Activity with ID %s does not exist', $id));
@@ -235,22 +261,33 @@ trait TimesheetCommandTrait
 
     /**
      * @param SymfonyStyle $io
-     * @param array<ActivityCollection> $activitys
+     * @param array<ActivityCollection> $activities
      * @return Activity
      */
-    private function askForActivity(SymfonyStyle $io, array $activitys): ActivityEntity
+    private function askForActivity(SymfonyStyle $io, array $activities): Activity
     {
         $choices = [];
-        /** @var ActivityCollection $activity */
-        foreach ($activitys as $activity) {
-            $choices[$activity->getId()] = $activity->getName();
+        /** @var ActivityCollection $activityEntity */
+        foreach ($activities as $activityEntity) {
+            $choices[$activityEntity->getId()] = $activityEntity->getName();
         }
 
         $id = $io->choice('Please select an activity', $choices);
 
         $flipped = array_flip($choices);
-        $id = $flipped[$id];
+        $id = intval($flipped[$id]);
 
-        return $this->loadActivityById($io, intval($id));
+        /* @var ActivityCollection $activity */
+        foreach ($activities as $activityEntity) {
+            if ($activityEntity->getId() !== $id) {
+                continue;
+            }
+
+            return Activity::fromCollection($activityEntity);
+        }
+
+        $io->error('Failed loading activity with ID ' . $id);
+
+        return null;
     }
 }
