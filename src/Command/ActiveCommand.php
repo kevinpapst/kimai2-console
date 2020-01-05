@@ -9,7 +9,9 @@
 
 namespace KimaiConsole\Command;
 
+use KimaiConsole\Client\ApiException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -23,7 +25,9 @@ final class ActiveCommand extends BaseCommand
         $this
             ->setName('active')
             ->setDescription('List active timesheets')
-            ->setHelp('This command shows all currently running timesheet records')
+            ->setHelp('This command shows all currently running timesheet records and lets you update them')
+            ->addOption('description', 'd', InputOption::VALUE_OPTIONAL, 'Set the given description or if none was given, you will be prompted for one.', false)
+            ->addOption('tags', 't', InputOption::VALUE_OPTIONAL, 'Set the given (comma separated list) of tags or if no tags were given, you will be prompted for them.', false)
         ;
     }
 
@@ -43,20 +47,43 @@ final class ActiveCommand extends BaseCommand
             return 0;
         }
 
-        $choices = [];
-
-        foreach ($running as $timesheet) {
-            $choices[] = [
-                $timesheet->getId(),
-                $timesheet->getBegin()->format(\DateTime::ISO8601),
-                $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
-                $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
-                $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
-                $timesheet->getDescription() !== null ? $timesheet->getDescription() : '',
-            ];
+        $update = false;
+        if (false !== ($description = $input->getOption('description'))) {
+            $update = true;
+        }
+        if (false !== ($tags = $input->getOption('tags'))) {
+            $update = true;
         }
 
-        $this->formatOutput($input, $output, ['ID', 'Started at', 'Activity', 'Project', 'Customer', 'Description'], $choices);
+        $rows = [];
+
+        if (!$update) {
+            foreach ($running as $timesheet) {
+                $rows[] = [
+                    $timesheet->getId(),
+                    $timesheet->getBegin()->format(\DateTime::ISO8601),
+                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
+                    $timesheet->getDescription() !== null ? $timesheet->getDescription() : '',
+                    implode(', ', $timesheet->getTags()),
+                ];
+            }
+
+            $this->formatOutput($input, $output, ['ID', 'Started at', 'Activity', 'Project', 'Customer', 'Description', 'Tags'], $rows);
+        } else {
+            $timesheet = $this->getSelectedTimesheet($io, $running);
+
+            try {
+                $this->updateTimesheet($io, $timesheet, $description, $tags);
+
+                $io->success('Updated timesheet');
+            } catch (ApiException $ex) {
+                $this->renderApiException($input, $io, $ex, 'Failed updating timesheet');
+
+                return 1;
+            }
+        }
 
         return 0;
     }

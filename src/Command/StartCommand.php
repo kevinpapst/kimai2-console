@@ -29,11 +29,11 @@ final class StartCommand extends BaseCommand
             ->setName('start')
             ->setDescription('Starts a new timesheet')
             ->setHelp('This command lets you start a new timesheet')
-            ->addOption('customer', null, InputOption::VALUE_OPTIONAL, 'The customer to filter the project list, can be an ID or a search term or empty (you will be prompted for a customer).')
-            ->addOption('project', null, InputOption::VALUE_OPTIONAL, 'The project to use, can be an ID or a search term or empty. You will be prompted for the project.')
-            ->addOption('activity', null, InputOption::VALUE_OPTIONAL, 'The activity ID to use')
-            ->addOption('tags', null, InputOption::VALUE_OPTIONAL, 'Comma separated list of tag names')
-            ->addOption('description', null, InputOption::VALUE_OPTIONAL, 'The timesheet description')
+            ->addOption('customer', 'c', InputOption::VALUE_OPTIONAL, 'The customer to filter the project list, can be an ID or a search term or empty (you will be prompted for a customer).')
+            ->addOption('project', 'p', InputOption::VALUE_OPTIONAL, 'The project to use, can be an ID or a search term or empty. You will be prompted for the project.')
+            ->addOption('activity', 'a', InputOption::VALUE_OPTIONAL, 'The activity ID to use')
+            ->addOption('tags', 't', InputOption::VALUE_OPTIONAL, 'Comma separated list of tag names')
+            ->addOption('description', 'd', InputOption::VALUE_OPTIONAL, 'The timesheet description')
         ;
     }
 
@@ -77,10 +77,12 @@ final class StartCommand extends BaseCommand
         $form->setProject($project->getId());
         $form->setActivity($activity->getId());
 
+        // TODO ask for tags if given empty
         if (null !== ($tags = $input->getOption('tags'))) {
             $form->setTags($tags);
         }
 
+        // TODO ask for description if given empty
         if (null !== ($description = $input->getOption('description'))) {
             $form->setDescription($description);
         }
@@ -88,8 +90,7 @@ final class StartCommand extends BaseCommand
         try {
             $timesheet = $api->apiTimesheetsPost($form);
         } catch (ApiException $ex) {
-            $io->error('Failed creating timesheet');
-            $this->renderApiException($input, $io, $ex);
+            $this->renderApiException($input, $io, $ex, 'Failed creating timesheet');
 
             return 1;
         }
@@ -108,33 +109,5 @@ final class StartCommand extends BaseCommand
         $io->horizontalTable(array_keys($fields), [$fields]);
 
         return 0;
-    }
-
-    private function renderApiException(InputInterface $input, SymfonyStyle $io, ApiException $ex)
-    {
-        if ($ex->getCode() === 400) {
-            $message = json_decode($ex->getResponseBody(), true);
-            if (false === $message) {
-                $io->error($ex->getMessage());
-            } else {
-                $messages = [$message['code'] . ' ' . $message['message']];
-                foreach ($message['errors']['children'] as $field => $errors) {
-                    if (array_key_exists('errors', $errors)) {
-                        foreach ($errors['errors'] as $msg) {
-                            $messages[] = $field . ': ' . $msg;
-                        }
-                    }
-                }
-                $io->warning($messages);
-            }
-
-            return;
-        }
-
-        $io->error($ex->getMessage());
-
-        if ($input->getOption('verbose') === true) {
-            $io->note($ex->getResponseBody());
-        }
     }
 }

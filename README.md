@@ -26,7 +26,7 @@ Before using it the first time, you have to create a configuration file, which h
 By default this config file will be located at `~/.kimai2-console.json`:
 
 ```bash
-kimai configuration:create
+kimai configuration
 ```
 
 Make sure the file is only readable for your own user:
@@ -40,31 +40,42 @@ That's it, you can use Kimai from the command line now.
 By default the configuration file targets the demo installation and will work... but now its time to target your own Kimai, so 
 edit the config file and change the settings: URL, username and API token.
 
+The following config keys are available:
+
+- `URL`: the Kimai installation URL
+- `USERNAME`: the Kimai installation URL
+- `API_KEY`: your Kimai API key (can be set when editing your profile)
+- `OPTIONS`: an array of request options for CURL (see [guzzle docs](http://docs.guzzlephp.org/en/stable/request-options.html))
+
+FAQ:
+
+- `I want to use a self-signed certificate` - add `"OPTIONS": {"verify": false}` to your configuration
+
 ## Available commands
 
 You get a list of all available commands with `kimai`.
 
-- `kimai active` - display all running timesheets
-- `kimai stop` - stop currently active timesheets
-- `kimai start` - starts a new timesheet
+- `kimai active` - display and update all running timesheets (via `--description` and `--tags`)
+- `kimai stop` - stop currently active timesheets and update them (via `--description` and `--tags`)
+- `kimai start` - start a new timesheet (see below)
 - `kimai customer:list` - show a list of customers
 - `kimai project:list` - show a list of projects
 - `kimai activity:list` - show a list of activities
 - `kimai version` - show the full version string of the remote installation
-- `kimai configuration:create` - creates the initial configuration file
+- `kimai configuration` - creates the initial configuration file or displays it
 
 To get help for a dedicated command use the `--help` switch, eg: `kimai project:list --help`
 
 ### Start a timesheet
 
-This command is rather clever and tries to detect customer, project and activity from your input in the following way:
+This command tries to detect customer, project and activity from your input in the following way:
 
 - if it is a number, then it tries to load the entity by its ID
   - if a entity is found, it will be used
 - if it is a string, then this is just as search term
   - if one entity is found, it will be used
   - if multiple entities are found, a select list is shown
-- if nothing is given or no reult was found in the previous steps, a list of all entities is fetched and shown for selection
+- if nothing is given or no result was found in the previous steps, a list of all entities is fetched and shown for selection
   - this list might be filtered (eg. only activities for found project)
 
 This most simple example will display a select list for all customers, then a filtered list for the projects of the chosen customer and finally a select list for all activities for the chosen project: 

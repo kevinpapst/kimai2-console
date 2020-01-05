@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ConfigurationCreateCommand extends BaseCommand
+final class ConfigurationCommand extends BaseCommand
 {
     /**
      * {@inheritdoc}
@@ -22,9 +22,9 @@ final class ConfigurationCreateCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName('configuration:create')
-            ->setDescription('Create a default configuration file')
-            ->setHelp('This command creates a default configuration file.')
+            ->setName('configuration')
+            ->setDescription('Handle the Kimai configuration file')
+            ->setHelp('This command creates a default configuration file or displays its information.')
         ;
     }
 
@@ -40,7 +40,20 @@ final class ConfigurationCreateCommand extends BaseCommand
         }
 
         if (file_exists($filename)) {
-            $io->warning('Skipping, as configuration file already exists: ' . $filename);
+            try {
+                $result = json_decode(file_get_contents($filename), true);
+                $config = new Configuration($result);
+
+                $io->success(
+                    'Configuration file: ' . $filename . PHP_EOL .
+                    'URL: ' . $config->getUrl() . PHP_EOL .
+                    'Username: ' . $config->getUsername() . PHP_EOL
+                );
+
+                return 0;
+            } catch (\Exception $ex) {
+                $io->error(sprintf('Invalid configuration file %s: %s', $filename, $ex->getMessage()));
+            }
 
             return 2;
         }
@@ -52,6 +65,8 @@ final class ConfigurationCreateCommand extends BaseCommand
         }
 
         $config = Configuration::getDefaultConfiguration();
+
+        // TODO ask for connection details
 
         $json = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 

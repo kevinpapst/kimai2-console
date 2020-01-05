@@ -85,7 +85,7 @@ class Application extends SymfonyApplication
             new Command\ActivityListCommand(),
             new Command\ProjectListCommand(),
             new Command\CustomerListCommand(),
-            new Command\ConfigurationCreateCommand(),
+            new Command\ConfigurationCommand(),
             new Command\VersionCommand(),
         ]);
 

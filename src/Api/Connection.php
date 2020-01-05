@@ -37,8 +37,13 @@ final class Connection
             $config->setApiKey('X-AUTH-USER', $this->configuration->getUsername());
             $config->setHost(rtrim($this->configuration->getUrl(), '/'));
 
+            $clientOptions = $this->configuration->getCurlOptions();
+            if ($this->configuration->isTrustSelfSignedCertificates()) {
+                $clientOptions['verify'] = false;
+            }
+
             $apiInstance = new DefaultApi(
-                new Client(),
+                new Client($clientOptions),
                 $config
             );
 

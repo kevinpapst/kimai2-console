@@ -38,6 +38,24 @@ final class Configuration
         return $this->settings['URL'];
     }
 
+    public function isTrustSelfSignedCertificates(): bool
+    {
+        if (!array_key_exists('SELF_SIGNED_CERT', $this->settings)) {
+            return false;
+        }
+
+        return (bool) $this->settings['SELF_SIGNED_CERT'];
+    }
+
+    public function getCurlOptions(): array
+    {
+        if (!array_key_exists('OPTIONS', $this->settings)) {
+            return [];
+        }
+
+        return $this->settings['OPTIONS'];
+    }
+
     public static function getDefaultConfiguration(): array
     {
         return [
@@ -63,12 +81,22 @@ final class Configuration
      */
     private function validate(array $settings)
     {
-        foreach (self::getDefaultConfiguration() as $key => $value) {
+        $required = ['URL', 'USERNAME', 'API_KEY'];
+
+        foreach ($required as $key) {
             if (!array_key_exists($key, $settings)) {
                 throw new \Exception('Missing config: ' . $key);
             } elseif (empty($settings[$key])) {
                 throw new \Exception('Empty config: ' . $key);
             }
+        }
+
+        if (array_key_exists('SELF_SIGNED_CERT', $settings) && !is_bool($settings['SELF_SIGNED_CERT'])) {
+            throw new \Exception('Invalid config "SELF_SIGNED_CERT": boolean expected');
+        }
+
+        if (array_key_exists('OPTIONS', $settings) && !is_array($settings['OPTIONS'])) {
+            throw new \Exception('Invalid config "OPTIONS": key-value array expected');
         }
 
         return true;
