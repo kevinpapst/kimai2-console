@@ -9,12 +9,11 @@
 
 namespace KimaiConsole\Command;
 
-use KimaiConsole\Constants;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class SelfUpdateCommand extends AbstractSelfCommand
+class SelfRollbackCommand extends AbstractSelfCommand
 {
     /**
      * {@inheritdoc}
@@ -22,9 +21,9 @@ class SelfUpdateCommand extends AbstractSelfCommand
     protected function configure()
     {
         $this
-            ->setName('self:update')
-            ->setDescription('Update to the latest available version')
-            ->setHelp('This command lets you update the "Remote Console" application to the latest version')
+            ->setName('self:rollback')
+            ->setDescription('Rollback to the latest available version')
+            ->setHelp('This command lets you rollback an updated application to the previous version')
         ;
     }
 
@@ -38,14 +37,14 @@ class SelfUpdateCommand extends AbstractSelfCommand
         $updater = $this->getUpdater();
 
         try {
-            $result = $updater->update();
+            $result = $updater->rollback();
             if ($result) {
-                $io->success(sprintf('Updated from version %s to %s', $updater->getOldVersion(), $updater->getNewVersion()));
+                $io->success(sprintf('Rollback from version %s to %s', $updater->getOldVersion(), $updater->getNewVersion()));
             } else {
-                $io->success(sprintf('Using latest version %s already', Constants::VERSION));
+                $io->success('Cannot rollback');
             }
         } catch (\Exception $ex) {
-            $io->error('Failed updating: ' . $ex->getMessage());
+            $io->error('Failed to rollback! ' . $ex->getMessage());
 
             return 1;
         }

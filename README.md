@@ -10,7 +10,7 @@ A PHP application to access your Kimai 2 installation via its API (http).
 - iconv extension
 - zlib extension
 
-## Installation and updates
+## Installation
 
 To install and update the Kimai console tools, execute the following commands: 
 
@@ -63,6 +63,12 @@ You get a list of all available commands with `kimai`.
 - `kimai activity:list` - show a list of activities
 - `kimai version` - show the full version string of the remote installation
 - `kimai configuration` - creates the initial configuration file or displays it
+
+The following commands will help you with updating the command:
+
+- `kimai self:check` - check if there is a new version available
+- `kimai self:update` - update your local version to the latest release
+- `kimai self:rollback` - rollback to a previous release
 
 To get help for a dedicated command use the `--help` switch, eg: `kimai project:list --help`
 

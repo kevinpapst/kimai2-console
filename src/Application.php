@@ -89,12 +89,11 @@ class Application extends SymfonyApplication
             new Command\VersionCommand(),
         ]);
 
-        // TODO commented, until it is working
-        /*
         if ('phar:' === substr(__FILE__, 0, 5)) {
+            $commands[] = new Command\SelfCheckCommand();
             $commands[] = new Command\SelfUpdateCommand();
+            $commands[] = new Command\SelfRollbackCommand();
         }
-        */
 
         return $commands;
     }
