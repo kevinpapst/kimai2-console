@@ -38,9 +38,6 @@ final class Connection
             $config->setHost(rtrim($this->configuration->getUrl(), '/'));
 
             $clientOptions = $this->configuration->getCurlOptions();
-            if ($this->configuration->isTrustSelfSignedCertificates()) {
-                $clientOptions['verify'] = false;
-            }
 
             $apiInstance = new DefaultApi(
                 new Client($clientOptions),

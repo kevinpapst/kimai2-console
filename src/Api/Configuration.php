@@ -38,15 +38,6 @@ final class Configuration
         return $this->settings['URL'];
     }
 
-    public function isTrustSelfSignedCertificates(): bool
-    {
-        if (!array_key_exists('SELF_SIGNED_CERT', $this->settings)) {
-            return false;
-        }
-
-        return (bool) $this->settings['SELF_SIGNED_CERT'];
-    }
-
     public function getCurlOptions(): array
     {
         if (!array_key_exists('OPTIONS', $this->settings)) {
@@ -89,10 +80,6 @@ final class Configuration
             } elseif (empty($settings[$key])) {
                 throw new \Exception('Empty config: ' . $key);
             }
-        }
-
-        if (array_key_exists('SELF_SIGNED_CERT', $settings) && !is_bool($settings['SELF_SIGNED_CERT'])) {
-            throw new \Exception('Invalid config "SELF_SIGNED_CERT": boolean expected');
         }
 
         if (array_key_exists('OPTIONS', $settings) && !is_array($settings['OPTIONS'])) {
