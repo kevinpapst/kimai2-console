@@ -29,6 +29,7 @@
         }
     ],
     "compression": "GZ",
+    "algorithm": "SHA512",
     "git-commit": "git-commit",
     "git-commit-short": "git-commit-short",
     "datetime": "release-date"

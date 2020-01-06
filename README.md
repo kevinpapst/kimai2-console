@@ -12,10 +12,13 @@ A PHP application to access your Kimai 2 installation via its API (http).
 
 ## Installation
 
-To install and update the Kimai console tools, execute the following commands: 
+To install the Kimai console tools, execute the following commands: 
 
 ```bash
 curl -LO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar
+curl -LO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar.sha1
+sha1sum --check kimai.phar.sha1
+rm kimai.phar.sha1
 chmod +x kimai.phar
 mv kimai.phar /usr/local/bin/kimai
 ```
@@ -63,12 +66,6 @@ You get a list of all available commands with `kimai`.
 - `kimai activity:list` - show a list of activities
 - `kimai version` - show the full version string of the remote installation
 - `kimai configuration` - creates the initial configuration file or displays it
-
-The following commands will help you with updating the command:
-
-- `kimai self:check` - check if there is a new version available
-- `kimai self:update` - update your local version to the latest release
-- `kimai self:rollback` - rollback to a previous release
 
 To get help for a dedicated command use the `--help` switch, eg: `kimai project:list --help`
 
@@ -121,9 +118,49 @@ The following environment variables are supported:
 - `KIMAI_MEMORY_LIMIT` - configures the allowed memory limit (eg `128MB`, or `-1` for unlimited) (see [here](https://www.php.net/manual/en/ini.core.php#ini.memory-limit)) 
 - `KIMAI_CONFIG` - path to your configuration file (defaults to: $HOME/.kimai2-console.json) 
 
-## How to build a release
+## FAQ
+
+### Updating the Console tools
+
+The following commands will help you with updating the Console tools:
+
+- `kimai self:check` - check if there is a new version available
+- `kimai self:update` - update your local version to the latest release
+- `kimai self:rollback` - rollback to a previous release
+
+There are security concerns with this approach, if you are cautious stick to the initial installation process.
+
+The `update` command will create a copy beside the original executable (if you wondered what `kimai-old.phar` is: now you know!), which is used by the `rollback` command.  
+
+### Check the contents of the PHAR
+
+There are several ways to see the contents of the PHAR, here are some:
+
+```
+phar extract -f kimai.phar
+box info kimai.phar -l
+```
+
+The PHAR contents are GZ compressed and verified with a SHA512 signature by the PHAR interpreter.
+
+### Build from source
+
+You need to have PHP cli installed with all required dependencies. 
+The dependencies might differ from than the ones required for running the tools. 
+Then install the [humbug/box](https://github.com/humbug/box) project, 
+according to their [installation docs](https://github.com/humbug/box/blob/master/doc/installation.md#installation).
+
+Now compiling the PHAR is simple as calling:
+
+```bash
+box compile
+```
+
+### Release on GitHub
 
 - Bump version in `src/Constants.php`
 - Execute `box compile`
+- Execute `sha1sum kimai.phar > kimai.phar.sha1`
 - Prepare a new GitHub release
-- Upload the file `kimai.phar` to the new release
+- Upload the files `kimai.phar` and `kimai.phar.sha1` to the new release
+- Publish the release
