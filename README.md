@@ -150,7 +150,7 @@ The dependencies might differ from than the ones required for running the tools.
 Then install the [humbug/box](https://github.com/humbug/box) project, 
 according to their [installation docs](https://github.com/humbug/box/blob/master/doc/installation.md#installation).
 
-Now compiling the PHAR is simple as calling:
+Now compiling the PHAR is as simple as calling:
 
 ```bash
 box compile

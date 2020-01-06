@@ -43,9 +43,9 @@ class SelfCheckCommand extends AbstractSelfCommand
             if ($result) {
                 // this is also triggered, if the current local version is higher then the remote version
                 // it does not trigger a version_compare, but only compare if the two versions are equal
-                $io->success(sprintf('There is a new release available in version: %s', $updater->getNewVersion()));
+                $io->warning(sprintf('There is a new release available in version: %s', $updater->getNewVersion()));
             } elseif (false === $updater->getNewVersion()) {
-                $io->success('There are no stable builds available.');
+                $io->error('There are no stable builds available.');
             } else {
                 $io->success(sprintf('You are running the latest version: %s', Constants::VERSION));
             }
