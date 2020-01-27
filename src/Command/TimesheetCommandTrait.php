@@ -214,7 +214,7 @@ trait TimesheetCommandTrait
                 $activityId = intval($activityId);
                 $activity = $this->loadActivityById($io, $activityId);
             } else {
-                $activityList = $api->apiActivitiesGet($projectId, true, 'true', null, null, null, $activityId);
+                $activityList = $api->apiActivitiesGet($projectId, true, null, null, null, null, $activityId);
                 if (count($activityList) === 1) {
                     $activity = Activity::fromCollection($activityList[0]);
                 } elseif (count($activityList) > 1) {
@@ -229,7 +229,7 @@ trait TimesheetCommandTrait
             return $activity;
         }
 
-        $activityList = $api->apiActivitiesGet($projectId, true, 'true');
+        $activityList = $api->apiActivitiesGet($projectId, true, null);
 
         if (count($activityList) === 0) {
             $io->error('Could not find any activity');

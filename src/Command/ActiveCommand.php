@@ -24,7 +24,7 @@ final class ActiveCommand extends BaseCommand
     {
         $this
             ->setName('active')
-            ->setDescription('List active timesheets')
+            ->setDescription('List active timesheets, update description and tags')
             ->setHelp('This command shows all currently running timesheet records and lets you update them')
             ->addOption('description', 'd', InputOption::VALUE_OPTIONAL, 'Set the given description or if none was given, you will be prompted for one.', false)
             ->addOption('tags', 't', InputOption::VALUE_OPTIONAL, 'Set the given (comma separated list) of tags or if no tags were given, you will be prompted for them.', false)

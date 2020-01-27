@@ -24,7 +24,7 @@ final class StopCommand extends BaseCommand
     {
         $this
             ->setName('stop')
-            ->setDescription('Stops running timesheets')
+            ->setDescription('Stop running timesheets, set description and tags')
             ->setHelp('This command lets you stop running timesheets, if multiple are running you can choose of them')
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Stop all running tasks without asking')
             ->addOption('description', 'd', InputOption::VALUE_OPTIONAL, 'Set the given description for the stopped timesheet. If none was given, you will be prompted for one.', false)
