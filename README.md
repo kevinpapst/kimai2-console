@@ -4,7 +4,7 @@ A PHP application to access your Kimai 2 installation via its API (http).
 
 **Requirements**
 
-- PHP 7.2.5
+- PHP 7.3
 - cURL extension
 - json extension
 - iconv extension
