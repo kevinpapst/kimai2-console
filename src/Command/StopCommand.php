@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 namespace KimaiConsole\Command;
 
-use KimaiConsole\Client\ApiException;
+use Swagger\Client\ApiException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,10 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class StopCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('stop')
@@ -32,15 +29,12 @@ final class StopCommand extends BaseCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $api = $this->getApi();
+            $api = $this->getTimesheetApi();
             $running = $api->apiTimesheetsActiveGet();
         } catch (ApiException $ex) {
             $this->renderApiException($input, $io, $ex, 'Failed loading active timesheets');
@@ -48,7 +42,7 @@ final class StopCommand extends BaseCommand
             return 1;
         }
 
-        if (count($running) === 0) {
+        if (\count($running) === 0) {
             $io->writeln('You have no active timesheets');
 
             return 0;
@@ -82,16 +76,16 @@ final class StopCommand extends BaseCommand
 
         if ($updateBeforeStop) {
             foreach ($running as $timesheet) {
-                if (!in_array($timesheet->getId(), $stopIds)) {
+                if (!\in_array($timesheet->getId(), $stopIds)) {
                     continue;
                 }
 
                 $row = [
                     $timesheet->getId(),
                     $timesheet->getBegin()->format(\DateTime::ISO8601),
-                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
+                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '', // @phpstan-ignore-line
                 ];
 
                 $io->table(
@@ -121,7 +115,7 @@ final class StopCommand extends BaseCommand
             }
         }
 
-        $io->success(sprintf('Stopped %s active timesheet(s) with ID: %s', count($stopped), implode(', ', $stopped)));
+        $io->success(sprintf('Stopped %s active timesheet(s) with ID: %s', \count($stopped), implode(', ', $stopped)));
 
         return 0;
     }

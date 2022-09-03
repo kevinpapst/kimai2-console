@@ -40,10 +40,8 @@ chmod 600 ~/.kimai2-console.json
 
 That's it, you can use Kimai from the command line now.
 
-By default the configuration file targets the demo installation and will work... but now its time to target your own Kimai, so 
-edit the config file and change the settings: URL, username and API token.
-
-The following config keys are available:
+By default, the configuration file targets the demo installation and will work... 
+but now it's time to target your own Kimai, so please edit the config file and change the settings: 
 
 - `URL`: the Kimai installation URL
 - `USERNAME`: the Kimai installation URL
@@ -122,15 +120,7 @@ The following environment variables are supported:
 
 ### Updating the Console tools
 
-The following commands will help you with updating the Console tools:
-
-- `kimai self:check` - check if there is a new version available
-- `kimai self:update` - update your local version to the latest release
-- `kimai self:rollback` - rollback to a previous release
-
-There are security concerns with this approach, if you are cautious stick to the initial installation process.
-
-The `update` command will create a copy beside the original executable (if you wondered what `kimai-old.phar` is: now you know!), which is used by the `rollback` command.  
+Redo the initial installation process and overwrite the file `/usr/local/bin/kimai` with the [latest release](https://github.com/kevinpapst/kimai2-console/releases).
 
 ### Check the contents of the PHAR
 
@@ -159,6 +149,7 @@ box compile
 ### Release on GitHub
 
 - Bump version in `src/Constants.php`
+- Execute `composer install --no-dev`
 - Execute `box compile`
 - Execute `sha1sum kimai.phar > kimai.phar.sha1`
 - Prepare a new GitHub release

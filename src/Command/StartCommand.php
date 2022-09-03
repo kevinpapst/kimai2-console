@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,8 +9,8 @@
 
 namespace KimaiConsole\Command;
 
-use KimaiConsole\Client\ApiException;
-use KimaiConsole\Client\Model\TimesheetEditForm;
+use Swagger\Client\ApiException;
+use Swagger\Client\Model\TimesheetEditForm;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,10 +20,7 @@ final class StartCommand extends BaseCommand
 {
     use TimesheetCommandTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('start')
@@ -37,10 +34,7 @@ final class StartCommand extends BaseCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -72,7 +66,7 @@ final class StartCommand extends BaseCommand
             return 1;
         }
 
-        $api = $this->getApi();
+        $api = $this->getTimesheetApi();
         $form = new TimesheetEditForm();
         $form->setProject($project->getId());
         $form->setActivity($activity->getId());

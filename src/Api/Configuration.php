@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,7 +40,7 @@ final class Configuration
 
     public function getCurlOptions(): array
     {
-        if (!array_key_exists('OPTIONS', $this->settings)) {
+        if (!\array_key_exists('OPTIONS', $this->settings)) {
             return [];
         }
 
@@ -75,14 +75,14 @@ final class Configuration
         $required = ['URL', 'USERNAME', 'API_KEY'];
 
         foreach ($required as $key) {
-            if (!array_key_exists($key, $settings)) {
+            if (!\array_key_exists($key, $settings)) {
                 throw new \Exception('Missing config: ' . $key);
             } elseif (empty($settings[$key])) {
                 throw new \Exception('Empty config: ' . $key);
             }
         }
 
-        if (array_key_exists('OPTIONS', $settings) && !is_array($settings['OPTIONS'])) {
+        if (\array_key_exists('OPTIONS', $settings) && !\is_array($settings['OPTIONS'])) {
             throw new \Exception('Invalid config "OPTIONS": key-value array expected');
         }
 

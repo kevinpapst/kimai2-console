@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,56 +10,41 @@
 namespace KimaiConsole\Api;
 
 use GuzzleHttp\Client;
-use KimaiConsole\Client\Api\DefaultApi;
+use Swagger\Client\Api\DefaultApi;
+use Swagger\Client\Configuration as SwaggerConfiguration;
 
 final class Connection
 {
     /**
-     * @var Configuration
+     * @var Client
+     */
+    private $client;
+    /**
+     * @var SwaggerConfiguration
      */
     private $configuration;
-    /**
-     * @var DefaultApi
-     */
-    private $api;
-    private $connected = false;
 
     public function __construct(Configuration $configuration)
     {
-        $this->configuration = $configuration;
+        $this->configuration = SwaggerConfiguration::getDefaultConfiguration();
+        $this->configuration->setApiKey('X-AUTH-TOKEN', $configuration->getApiKey());
+        $this->configuration->setApiKey('X-AUTH-USER', $configuration->getUsername());
+        $this->configuration->setHost(rtrim($configuration->getUrl(), '/'));
+
+        $clientOptions = $configuration->getCurlOptions();
+        $this->client = new Client($clientOptions);
+
+        $apiInstance = new DefaultApi($this->client, $this->configuration);
+        $apiInstance->apiPingGet();
     }
 
-    public function connect()
+    public function getClient(): Client
     {
-        if (!$this->connected) {
-            $config = \KimaiConsole\Client\Configuration::getDefaultConfiguration();
-            $config->setApiKey('X-AUTH-TOKEN', $this->configuration->getApiKey());
-            $config->setApiKey('X-AUTH-USER', $this->configuration->getUsername());
-            $config->setHost(rtrim($this->configuration->getUrl(), '/'));
-
-            $clientOptions = $this->configuration->getCurlOptions();
-
-            $apiInstance = new DefaultApi(
-                new Client($clientOptions),
-                $config
-            );
-
-            $r = $apiInstance->apiPingGet();
-
-            $this->api = $apiInstance;
-
-            $this->connected = true;
-        }
-
-        return $this->api;
+        return $this->client;
     }
 
-    public function getApi(): DefaultApi
+    public function getConfiguration(): SwaggerConfiguration
     {
-        if (!$this->connected) {
-            $this->connect();
-        }
-
-        return $this->api;
+        return $this->configuration;
     }
 }

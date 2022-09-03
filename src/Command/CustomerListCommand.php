@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,10 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class CustomerListCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('customer:list')
@@ -29,10 +26,7 @@ final class CustomerListCommand extends BaseCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -42,8 +36,13 @@ final class CustomerListCommand extends BaseCommand
             $term = $input->getOption('term');
         }
 
-        $api = $this->getApi();
-        $collection = $api->apiCustomersGet(true, null, null, $term);
+        $api = $this->getCustomerApi();
+
+        $visible = '1';
+        $order = null;
+        $order_by = null;
+
+        $collection = $api->apiCustomersGet($visible, $order, $order_by, $term);
 
         $rows = [];
         foreach ($collection as $customer) {

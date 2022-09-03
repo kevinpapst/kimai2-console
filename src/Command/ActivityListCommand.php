@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,14 +12,10 @@ namespace KimaiConsole\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ActivityListCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('activity:list')
@@ -27,16 +23,12 @@ final class ActivityListCommand extends BaseCommand
             ->setHelp('This command lets you search for activities')
             ->addOption('project', null, InputOption::VALUE_OPTIONAL, 'The project to be filtered', null)
             ->addOption('term', null, InputOption::VALUE_OPTIONAL, 'A search term to filter activities', null)
+            ->addOption('globals', null, InputOption::VALUE_NONE, 'Show global activities only (will ignore project option)')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $project = null;
         $term = null;
 
@@ -48,8 +40,20 @@ final class ActivityListCommand extends BaseCommand
             $term = $input->getOption('term');
         }
 
-        $api = $this->getApi();
-        $collection = $api->apiActivitiesGet($project, true, null, null, 'project', null, $term);
+        $api = $this->getActivityApi();
+
+        $projects = $project;
+        $visible = '1';
+        $globals = null;
+        $order_by = 'project';
+        $order = null;
+
+        if ($input->getOption('globals')) {
+            $globals = 'true';
+        }
+
+        // null parameters are deprecated
+        $collection = $api->apiActivitiesGet(null, $projects, $visible, $globals, null, $order_by, $order, $term);
 
         $rows = [];
         foreach ($collection as $activity) {

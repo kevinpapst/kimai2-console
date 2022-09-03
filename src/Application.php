@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,9 @@ namespace KimaiConsole;
 use KimaiConsole\Exception\ConnectionProblemException;
 use KimaiConsole\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Application as SymfonyApplication;
+use Symfony\Component\Console\Command\HelpCommand;
+use Symfony\Component\Console\Command\ListCommand;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,11 +22,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Application extends SymfonyApplication
 {
-    private static $logo = ' _  _____ __  __    _    ___   ____  
-| |/ /_ _|  \/  |  / \  |_ _| |___ \ 
-| \' / | || |\/| | / _ \  | |    __) |
-| . \ | || |  | |/ ___ \ | |   / __/ 
-|_|\_\___|_|  |_/_/   \_\___| |_____|
+    private static $logo = ' _  _____ __  __    _    ___
+| |/ /_ _|  \/  |  / \  |_ _|
+| \' / | || |\/| | / _ \  | |
+| . \ | || |  | |/ ___ \ | |
+|_|\_\___|_|  |_/_/   \_\___|
 
 ';
 
@@ -32,15 +35,12 @@ class Application extends SymfonyApplication
         parent::__construct(Constants::SOFTWARE, Constants::VERSION);
     }
 
-    public function getLongVersion()
+    public function getLongVersion(): string
     {
         return sprintf('<info>%s</info> version <comment>%s</comment> %s (#%s)', $this->getName(), $this->getVersion(), Constants::DATE, Constants::GIT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -70,15 +70,15 @@ class Application extends SymfonyApplication
         } catch (\Exception $e) {
             $io->error('Failed execution: ' . $e->getMessage());
 
-            throw $e;
+            return 3;
         }
-
-        return 0;
     }
 
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
-        $commands = array_merge(parent::getDefaultCommands(), [
+        return [
+            new HelpCommand(),
+            new ListCommand(),
             new Command\ActiveCommand(),
             new Command\StartCommand(),
             new Command\StopCommand(),
@@ -87,21 +87,10 @@ class Application extends SymfonyApplication
             new Command\CustomerListCommand(),
             new Command\ConfigurationCommand(),
             new Command\VersionCommand(),
-        ]);
-
-        if ('phar:' === substr(__FILE__, 0, 5)) {
-            $commands[] = new Command\SelfCheckCommand();
-            $commands[] = new Command\SelfUpdateCommand();
-            $commands[] = new Command\SelfRollbackCommand();
-        }
-
-        return $commands;
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         $definition = parent::getDefaultInputDefinition();
         $definition->addOption(new InputOption('--profile', null, InputOption::VALUE_NONE, 'Display timing and memory usage information'));
@@ -111,7 +100,7 @@ class Application extends SymfonyApplication
         return $definition;
     }
 
-    public function getHelp()
+    public function getHelp(): string
     {
         return self::$logo . parent::getHelp();
     }
