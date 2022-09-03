@@ -56,6 +56,7 @@ if ($require) {
 unset($require);
 // -------------------------- AUTOLOAD --------------------------
 
+error_reporting(E_ALL & ~E_DEPRECATED); // swagger generates php 5.5 code, which triggers deprecations on PHP 8
 set_time_limit(0);
 
 use KimaiConsole\Application;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,10 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigurationCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('configuration')
@@ -28,10 +25,7 @@ final class ConfigurationCommand extends BaseCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -58,7 +52,7 @@ final class ConfigurationCommand extends BaseCommand
             return 2;
         }
 
-        if (!is_writable(dirname($filename))) {
+        if (!is_writable(\dirname($filename))) {
             $io->error('Cannot write config file: ' . $filename);
 
             return 1;

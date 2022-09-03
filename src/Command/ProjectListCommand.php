@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,31 +12,22 @@ namespace KimaiConsole\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ProjectListCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('project:list')
             ->setDescription('List available projects')
             ->setHelp('This command lets you search for projects')
-            ->addOption('customer', null, InputOption::VALUE_OPTIONAL, 'A customer to filter projects by', null)
-            ->addOption('term', null, InputOption::VALUE_OPTIONAL, 'A search term to filter projects', null)
+            ->addOption('customer', null, InputOption::VALUE_OPTIONAL, 'A customer ID to filter projects by (comma separated list possible)')
+            ->addOption('term', null, InputOption::VALUE_OPTIONAL, 'A search term to filter projects')
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $term = null;
         $customer = null;
 
@@ -48,8 +39,18 @@ final class ProjectListCommand extends BaseCommand
             $customer = $input->getOption('customer');
         }
 
-        $api = $this->getApi();
-        $collection = $api->apiProjectsGet($customer, true, null, 'customer', $term);
+        $api = $this->getProjectApi();
+
+        $customers = $customer;
+        $visible = '1';
+        $start = null;
+        $end = null;
+        $ignore_dates = null;
+        $order = null;
+        $order_by = 'customer';
+
+        // null parameters are deprecated
+        $collection = $api->apiProjectsGet(null, $customers, $visible, $start, $end, $ignore_dates, $order, $order_by, $term);
 
         $rows = [];
         foreach ($collection as $project) {

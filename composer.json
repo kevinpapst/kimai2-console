@@ -2,7 +2,7 @@
     "name": "kevinpapst/kimai2-console",
     "license": "MIT",
     "type": "project",
-    "description": "Kimai 2 - console application to manage your time-tracking data remotely",
+    "description": "Kimai - console application to manage your time-tracking data remotely",
     "authors": [
         {
             "name": "Kevin Papst",
@@ -10,14 +10,21 @@
         }
     ],
     "require": {
-        "php": "^7.2.5",
+        "php": "7.4.*||8.0.*||8.1.*",
         "ext-iconv": "*",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^6.5",
-        "padraic/phar-updater": "^1.0",
-        "symfony/console": "5.0.*"
+        "kimai/api-php": "^0.1.0",
+        "symfony/console": "5.*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "phpstan/phpstan": "^1.0"
     },
     "config": {
+        "platform": {
+            "php": "7.4"
+        },
         "preferred-install": {
             "*": "dist"
         },
@@ -38,7 +45,14 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.0.*"
+            "require": "5.*"
         }
+    },
+    "scripts": {
+        "phpstan": [
+            "vendor/bin/phpstan analyse src -c phpstan.neon --level=5"
+        ],
+        "codestyle": "vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=none",
+        "codestyle-fix": "vendor/bin/php-cs-fixer fix"
     }
 }

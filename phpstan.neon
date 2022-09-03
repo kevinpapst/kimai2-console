@@ -1,0 +1,9 @@
+includes:
+    - %rootDir%/../phpstan/conf/bleedingEdge.neon
+
+parameters:
+    tmpDir: %rootDir%/../../../var/phpstan
+    excludePaths:
+        - 'src/Client/'
+    treatPhpDocTypesAsCertain: false
+    inferPrivatePropertyTypeFromConstructor: true

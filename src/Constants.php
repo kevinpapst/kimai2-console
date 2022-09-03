@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,11 +14,11 @@ class Constants
     /**
      * The current release version
      */
-    public const VERSION = '0.3.3';
+    public const VERSION = '0.4';
     /**
      * The software name
      */
-    public const SOFTWARE = 'Kimai 2 - Remote Console';
+    public const SOFTWARE = 'Kimai - Remote Console';
     /**
      * The actual git commit
      */

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Kimai 2 - Remote Console.
+ * This file is part of the "Remote Console" for Kimai.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,7 +9,7 @@
 
 namespace KimaiConsole\Command;
 
-use KimaiConsole\Client\ApiException;
+use Swagger\Client\ApiException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,10 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ActiveCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('active')
@@ -31,17 +28,14 @@ final class ActiveCommand extends BaseCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $api = $this->getApi();
+        $api = $this->getTimesheetApi();
         $running = $api->apiTimesheetsActiveGet();
 
-        if (count($running) === 0) {
+        if (\count($running) === 0) {
             $io->writeln('You have no active timesheets');
 
             return 0;
@@ -62,10 +56,10 @@ final class ActiveCommand extends BaseCommand
                 $rows[] = [
                     $timesheet->getId(),
                     $timesheet->getBegin()->format(\DateTime::ISO8601),
-                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
-                    $timesheet->getDescription() !== null ? $timesheet->getDescription() : '',
+                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getDescription() !== null ? $timesheet->getDescription() : '', // @phpstan-ignore-line
                     implode(', ', $timesheet->getTags()),
                 ];
             }
