@@ -168,9 +168,9 @@ abstract class BaseCommand extends Command
             $rows[] = [
                 $timesheet->getId(),
                 $timesheet->getBegin()->format(\DateTime::ISO8601),
-                $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '', // @phpstan-ignore-line
-                $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '', // @phpstan-ignore-line
-                $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '', // @phpstan-ignore-line
+                $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
+                $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
+                $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
                 $timesheet->getDescription(),
                 implode(', ', $timesheet->getTags()),
             ];
@@ -193,16 +193,7 @@ abstract class BaseCommand extends Command
         return null;
     }
 
-    /**
-     * @param SymfonyStyle $io
-     * @param TimesheetCollectionExpanded $timesheet
-     * @param bool $description
-     * @param bool $tags
-     * @throws ApiException
-     * @throws ConnectionProblemException
-     * @throws InvalidConfigurationException
-     */
-    protected function updateTimesheet(SymfonyStyle $io, TimesheetCollectionExpanded $timesheet, $description = false, $tags = false): void
+    protected function updateTimesheet(SymfonyStyle $io, TimesheetCollectionExpanded $timesheet, ?bool $description = false, ?bool $tags = false): void
     {
         $form = new TimesheetEditForm();
 
@@ -221,6 +212,6 @@ abstract class BaseCommand extends Command
         }
 
         $api = $this->getTimesheetApi();
-        $api->apiTimesheetsIdPatch($timesheet->getId(), $form);
+        $api->patchPatchTimesheet($form, (string) $timesheet->getId());
     }
 }

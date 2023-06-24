@@ -35,7 +35,7 @@ final class StopCommand extends BaseCommand
 
         try {
             $api = $this->getTimesheetApi();
-            $running = $api->apiTimesheetsActiveGet();
+            $running = $api->getActiveTimesheet();
         } catch (ApiException $ex) {
             $this->renderApiException($input, $io, $ex, 'Failed loading active timesheets');
 
@@ -83,9 +83,9 @@ final class StopCommand extends BaseCommand
                 $row = [
                     $timesheet->getId(),
                     $timesheet->getBegin()->format(\DateTime::ISO8601),
-                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '', // @phpstan-ignore-line
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '', // @phpstan-ignore-line
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '', // @phpstan-ignore-line
+                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
                 ];
 
                 $io->table(
@@ -108,7 +108,7 @@ final class StopCommand extends BaseCommand
         $stopped = [];
         foreach ($stopIds as $id) {
             try {
-                $api->apiTimesheetsIdStopPatch($id);
+                $api->patchStopTimesheet((string) $id);
                 $stopped[] = $id;
             } catch (ApiException $ex) {
                 $this->renderApiException($input, $io, $ex, 'Failed stopping timesheet');

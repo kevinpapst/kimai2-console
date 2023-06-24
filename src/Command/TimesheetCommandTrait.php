@@ -39,7 +39,7 @@ trait TimesheetCommandTrait
             if (\intval($customerId)) {
                 $customer = $this->loadCustomerById($io, $customerId);
             } else {
-                $customerList = $api->apiCustomersGet('1', null, null, $customerId);
+                $customerList = $api->getGetCustomers('1', null, null, $customerId);
                 if (\count($customerList) === 1) {
                     $customer = Customer::fromCollection($customerList[0]);
                 } elseif (\count($customerList) > 1) {
@@ -54,7 +54,7 @@ trait TimesheetCommandTrait
             return $customer;
         }
 
-        $customerList = $api->apiCustomersGet('1');
+        $customerList = $api->getGetCustomers('1');
 
         if (\count($customerList) === 0) {
             $io->error('Could not find any customer');
@@ -70,7 +70,7 @@ trait TimesheetCommandTrait
         $api = $this->getCustomerApi();
 
         try {
-            $customerEntity = $api->apiCustomersIdGet((string) $id);
+            $customerEntity = $api->getGetCustomer((string) $id);
 
             return Customer::fromEntity($customerEntity);
         } catch (\Exception $ex) {
@@ -92,7 +92,6 @@ trait TimesheetCommandTrait
     private function askForCustomer(SymfonyStyle $io, array $customers): ?Customer
     {
         $choices = [];
-        /** @var CustomerCollection $customerEntity */
         foreach ($customers as $customerEntity) {
             $choices[$customerEntity->getId()] = $customerEntity->getName();
         }
@@ -102,7 +101,6 @@ trait TimesheetCommandTrait
         $flipped = array_flip($choices);
         $id = \intval($flipped[$id]);
 
-        /** @var CustomerCollection $customerEntity */
         foreach ($customers as $customerEntity) {
             if ($customerEntity->getId() !== $id) {
                 continue;
@@ -129,7 +127,7 @@ trait TimesheetCommandTrait
                 $projectId = \intval($projectId);
                 $project = $this->loadProjectById($io, $projectId);
             } else {
-                $projectList = $api->apiProjectsGet(null, $customerId, '1', null, null, null, null, null, $projectId);
+                $projectList = $api->getGetProjects($customerId, null, '1', null, null, null, null, null, null, $projectId);
                 if (\count($projectList) === 1) {
                     $project = Project::fromCollection($projectList[0]);
                 } elseif (\count($projectList) > 1) {
@@ -144,7 +142,7 @@ trait TimesheetCommandTrait
             return $project;
         }
 
-        $projectList = $api->apiProjectsGet(null, $customerId, '1');
+        $projectList = $api->getGetProjects($customerId, null, '1');
 
         if (\count($projectList) === 0) {
             $io->error('Could not find any project');
@@ -160,7 +158,7 @@ trait TimesheetCommandTrait
         $api = $this->getProjectApi();
 
         try {
-            $projectEntity = $api->apiProjectsIdGet((string) $id);
+            $projectEntity = $api->getGetProject((string) $id);
 
             return Project::fromEntity($projectEntity);
         } catch (\Exception $ex) {
@@ -219,7 +217,7 @@ trait TimesheetCommandTrait
                 $activityId = \intval($activityId);
                 $activity = $this->loadActivityById($io, $activityId);
             } else {
-                $activityList = $api->apiActivitiesGet(null, $projectId, '1', null, null, null, null, $activityId);
+                $activityList = $api->getGetActivities($projectId, null, '1', null, null, null, $activityId);
                 if (\count($activityList) === 1) {
                     $activity = Activity::fromCollection($activityList[0]);
                 } elseif (\count($activityList) > 1) {
@@ -234,7 +232,7 @@ trait TimesheetCommandTrait
             return $activity;
         }
 
-        $activityList = $api->apiActivitiesGet(null, $projectId, '1');
+        $activityList = $api->getGetActivities($projectId, null, '1');
 
         if (\count($activityList) === 0) {
             $io->error('Could not find any activity');
@@ -250,7 +248,7 @@ trait TimesheetCommandTrait
         $api = $this->getActivityApi();
 
         try {
-            $activityEntity = $api->apiActivitiesIdGet($id);
+            $activityEntity = $api->getGetActivity((string) $id);
 
             return Activity::fromEntity($activityEntity);
         } catch (\Exception $ex) {

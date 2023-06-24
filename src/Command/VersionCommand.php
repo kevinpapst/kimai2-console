@@ -15,9 +15,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class VersionCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -32,7 +29,7 @@ final class VersionCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $version = $this->getApi()->apiVersionGet();
+        $version = $this->getApi()->getAppApiStatusVersion();
 
         $io = new SymfonyStyle($input, $output);
         $io->writeln($version->getCopyright());

@@ -42,7 +42,7 @@ final class CustomerListCommand extends BaseCommand
         $order = null;
         $order_by = null;
 
-        $collection = $api->apiCustomersGet($visible, $order, $order_by, $term);
+        $collection = $api->getGetCustomers($visible, $order, $order_by, $term);
 
         $rows = [];
         foreach ($collection as $customer) {

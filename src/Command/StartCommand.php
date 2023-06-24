@@ -82,7 +82,7 @@ final class StartCommand extends BaseCommand
         }
 
         try {
-            $timesheet = $api->apiTimesheetsPost($form);
+            $timesheet = $api->postPostTimesheet($form);
         } catch (ApiException $ex) {
             $this->renderApiException($input, $io, $ex, 'Failed creating timesheet');
 

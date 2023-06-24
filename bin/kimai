@@ -13,7 +13,7 @@ if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     exit(1);
 }
 
-foreach (['json', 'iconv'] as $extension) {
+foreach (['json', 'iconv', 'mbstring', 'curl'] as $extension) {
     if (!extension_loaded($extension)) {
         fwrite(STDERR, sprintf("PHP extension ext-%s is missing from your system. Install or enable it.\n", $extension));
         exit(1);

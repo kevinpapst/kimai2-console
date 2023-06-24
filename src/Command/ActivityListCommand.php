@@ -42,18 +42,17 @@ final class ActivityListCommand extends BaseCommand
 
         $api = $this->getActivityApi();
 
-        $projects = $project;
         $visible = '1';
         $globals = null;
         $order_by = 'project';
         $order = null;
 
         if ($input->getOption('globals')) {
-            $globals = 'true';
+            $globals = '1';
         }
 
         // null parameters are deprecated
-        $collection = $api->apiActivitiesGet(null, $projects, $visible, $globals, null, $order_by, $order, $term);
+        $collection = $api->getGetActivities($project, null, $visible, $globals, $order_by, $order, $term);
 
         $rows = [];
         foreach ($collection as $activity) {

@@ -15,14 +15,8 @@ use Swagger\Client\Configuration as SwaggerConfiguration;
 
 final class Connection
 {
-    /**
-     * @var Client
-     */
-    private $client;
-    /**
-     * @var SwaggerConfiguration
-     */
-    private $configuration;
+    private Client $client;
+    private SwaggerConfiguration $configuration;
 
     public function __construct(Configuration $configuration)
     {
@@ -35,7 +29,7 @@ final class Connection
         $this->client = new Client($clientOptions);
 
         $apiInstance = new DefaultApi($this->client, $this->configuration);
-        $apiInstance->apiPingGet();
+        $apiInstance->getAppApiStatusPing();
     }
 
     public function getClient(): Client

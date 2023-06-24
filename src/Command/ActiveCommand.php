@@ -33,7 +33,7 @@ final class ActiveCommand extends BaseCommand
         $io = new SymfonyStyle($input, $output);
 
         $api = $this->getTimesheetApi();
-        $running = $api->apiTimesheetsActiveGet();
+        $running = $api->getActiveTimesheet();
 
         if (\count($running) === 0) {
             $io->writeln('You have no active timesheets');
@@ -56,10 +56,10 @@ final class ActiveCommand extends BaseCommand
                 $rows[] = [
                     $timesheet->getId(),
                     $timesheet->getBegin()->format(\DateTime::ISO8601),
-                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '', // @phpstan-ignore-line
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '', // @phpstan-ignore-line
-                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '', // @phpstan-ignore-line
-                    $timesheet->getDescription() !== null ? $timesheet->getDescription() : '', // @phpstan-ignore-line
+                    $timesheet->getActivity() !== null ? $timesheet->getActivity()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getName() : '',
+                    $timesheet->getProject() !== null ? $timesheet->getProject()->getCustomer()->getName() : '',
+                    $timesheet->getDescription() !== null ? $timesheet->getDescription() : '',
                     implode(', ', $timesheet->getTags()),
                 ];
             }

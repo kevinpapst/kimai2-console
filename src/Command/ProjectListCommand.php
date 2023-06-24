@@ -41,16 +41,16 @@ final class ProjectListCommand extends BaseCommand
 
         $api = $this->getProjectApi();
 
-        $customers = $customer;
         $visible = '1';
         $start = null;
         $end = null;
+        $global_activities = null;
         $ignore_dates = null;
         $order = null;
         $order_by = 'customer';
 
         // null parameters are deprecated
-        $collection = $api->apiProjectsGet(null, $customers, $visible, $start, $end, $ignore_dates, $order, $order_by, $term);
+        $collection = $api->getGetProjects($customer, null, $visible, $start, $end, $ignore_dates, $global_activities, $order, $order_by, $term);
 
         $rows = [];
         foreach ($collection as $project) {
