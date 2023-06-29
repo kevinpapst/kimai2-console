@@ -193,7 +193,7 @@ abstract class BaseCommand extends Command
         return null;
     }
 
-    protected function updateTimesheet(SymfonyStyle $io, TimesheetCollectionExpanded $timesheet, ?bool $description = false, ?bool $tags = false): void
+    protected function updateTimesheet(SymfonyStyle $io, TimesheetCollectionExpanded $timesheet, bool|string|null $description = false, bool|string|null $tags = false): void
     {
         $form = new TimesheetEditForm();
 
