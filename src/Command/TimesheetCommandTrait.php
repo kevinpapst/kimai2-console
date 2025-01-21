@@ -45,7 +45,7 @@ trait TimesheetCommandTrait
                 } elseif (\count($customerList) > 1) {
                     $customer = $this->askForCustomer($io, $customerList);
                 } else {
-                    $io->warning(sprintf('Could not find customer with term: %s', $customerId));
+                    $io->warning(\sprintf('Could not find customer with term: %s', $customerId));
                 }
             }
         }
@@ -75,9 +75,9 @@ trait TimesheetCommandTrait
             return Customer::fromEntity($customerEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
-                $io->error(sprintf('Customer with ID %s does not exist', $id));
+                $io->error(\sprintf('Customer with ID %s does not exist', $id));
             } else {
-                $io->error(sprintf('Failed loading customer with ID %s: %s', $id, $ex->getMessage()));
+                $io->error(\sprintf('Failed loading customer with ID %s: %s', $id, $ex->getMessage()));
             }
         }
 
@@ -133,7 +133,7 @@ trait TimesheetCommandTrait
                 } elseif (\count($projectList) > 1) {
                     $project = $this->askForProject($io, $projectList);
                 } else {
-                    $io->warning(sprintf('Could not find project with term: %s', $projectId));
+                    $io->warning(\sprintf('Could not find project with term: %s', $projectId));
                 }
             }
         }
@@ -163,9 +163,9 @@ trait TimesheetCommandTrait
             return Project::fromEntity($projectEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
-                $io->error(sprintf('Project with ID %s does not exist', $id));
+                $io->error(\sprintf('Project with ID %s does not exist', $id));
             } else {
-                $io->error(sprintf('Failed loading project with ID %s: %s', $id, $ex->getMessage()));
+                $io->error(\sprintf('Failed loading project with ID %s: %s', $id, $ex->getMessage()));
             }
         }
 
@@ -223,7 +223,7 @@ trait TimesheetCommandTrait
                 } elseif (\count($activityList) > 1) {
                     $activity = $this->askForActivity($io, $activityList);
                 } else {
-                    $io->warning(sprintf('Could not find activity with term: %s', $activityId));
+                    $io->warning(\sprintf('Could not find activity with term: %s', $activityId));
                 }
             }
         }
@@ -253,9 +253,9 @@ trait TimesheetCommandTrait
             return Activity::fromEntity($activityEntity);
         } catch (\Exception $ex) {
             if ($ex->getCode() === 404) {
-                $io->error(sprintf('Activity with ID %s does not exist', $id));
+                $io->error(\sprintf('Activity with ID %s does not exist', $id));
             } else {
-                $io->error(sprintf('Failed loading activity with ID %s: %s', $id, $ex->getMessage()));
+                $io->error(\sprintf('Failed loading activity with ID %s: %s', $id, $ex->getMessage()));
             }
         }
 

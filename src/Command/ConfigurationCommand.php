@@ -46,7 +46,7 @@ final class ConfigurationCommand extends BaseCommand
 
                 return 0;
             } catch (\Exception $ex) {
-                $io->error(sprintf('Invalid configuration file %s: %s', $filename, $ex->getMessage()));
+                $io->error(\sprintf('Invalid configuration file %s: %s', $filename, $ex->getMessage()));
             }
 
             return 2;

@@ -14,7 +14,7 @@ final class Configuration
     /**
      * @var array
      */
-    private $settings;
+    private array $settings;
 
     public function __construct(array $settings)
     {

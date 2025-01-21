@@ -115,7 +115,7 @@ final class StopCommand extends BaseCommand
             }
         }
 
-        $io->success(sprintf('Stopped %s active timesheet(s) with ID: %s', \count($stopped), implode(', ', $stopped)));
+        $io->success(\sprintf('Stopped %s active timesheet(s) with ID: %s', \count($stopped), implode(', ', $stopped)));
 
         return 0;
     }

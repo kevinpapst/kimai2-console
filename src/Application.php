@@ -37,7 +37,7 @@ class Application extends SymfonyApplication
 
     public function getLongVersion(): string
     {
-        return sprintf('<info>%s</info> version <comment>%s</comment> %s (#%s)', $this->getName(), $this->getVersion(), Constants::DATE, Constants::GIT);
+        return \sprintf('<info>%s</info> version <comment>%s</comment> %s (#%s)', $this->getName(), $this->getVersion(), Constants::DATE, Constants::GIT);
     }
 
     public function doRun(InputInterface $input, OutputInterface $output): int
