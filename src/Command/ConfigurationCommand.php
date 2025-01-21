@@ -30,7 +30,7 @@ final class ConfigurationCommand extends BaseCommand
         $io = new SymfonyStyle($input, $output);
 
         if (false === $filename = getenv('KIMAI_CONFIG')) {
-            $filename = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai2-console.json';
+            $filename = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai-api.json';
         }
 
         if (file_exists($filename)) {

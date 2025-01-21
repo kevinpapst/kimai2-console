@@ -58,8 +58,8 @@ final class Configuration
 
     public static function getFilename(): string
     {
-        if (false === $filename = getenv('KIMAI_CONFIG')) {
-            $filename = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai2-console.json';
+        if (false === ($filename = getenv('KIMAI_CONFIG'))) {
+            $filename = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai-api.json';
         }
 
         return $filename;

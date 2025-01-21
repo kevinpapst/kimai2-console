@@ -28,7 +28,7 @@ mv kimai.phar /usr/local/bin/kimai
 ### Configuration file
 
 Before using it the first time, you have to create a configuration file, which holds the connection infos for Kimai.
-By default this config file will be located at `~/.kimai2-console.json`:
+By default this config file will be located at `~/.kimai-api.json`:
 
 ```bash
 kimai configuration
@@ -37,7 +37,7 @@ kimai configuration
 Make sure the file is only readable for your own user:
  
 ```bash
-chmod 600 ~/.kimai2-console.json
+chmod 600 ~/.kimai-api.json
 ```
 
 That's it, you can use Kimai from the command line now.
