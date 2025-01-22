@@ -30,13 +30,14 @@ trait TimesheetCommandTrait
 
     abstract protected function getActivityApi(): ActivityApi;
 
-    private function findCustomer(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $customerId): ?Customer
+    private function findCustomer(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string|int|null $customerId): ?Customer
     {
         $api = $this->getCustomerApi();
         $customer = null;
 
         if (null !== $customerId) {
-            if (\intval($customerId)) {
+            if (is_numeric($customerId)) {
+                $customerId = \intval($customerId);
                 $customer = $this->loadCustomerById($io, $customerId);
             } else {
                 $customerList = $api->getGetCustomers('1', null, null, $customerId);
@@ -65,7 +66,7 @@ trait TimesheetCommandTrait
         return $this->askForCustomer($io, $customerList);
     }
 
-    private function loadCustomerById(SymfonyStyle $io, $id): ?Customer
+    private function loadCustomerById(SymfonyStyle $io, string|int $id): ?Customer
     {
         $api = $this->getCustomerApi();
 
@@ -116,18 +117,29 @@ trait TimesheetCommandTrait
 
     // ==============================================================================================================
 
-    private function findProject(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $projectId, ?Customer $customer = null): ?Project
+    private function findProject(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string|int|null $projectId, ?Customer $customer = null): ?Project
     {
         $api = $this->getProjectApi();
         $project = null;
         $customerId = null !== $customer ? (string) $customer->getId() : null;
 
         if (null !== $projectId) {
-            if (\intval($projectId)) {
+            if (is_numeric($projectId)) {
                 $projectId = \intval($projectId);
                 $project = $this->loadProjectById($io, $projectId);
             } else {
-                $projectList = $api->getGetProjects($customerId, null, '1', null, null, null, null, null, null, $projectId);
+                $projectList = $api->getGetProjects(
+                    $customerId,
+                    null,  // @phpstan-ignore argument.type
+                    '1',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $projectId
+                );
                 if (\count($projectList) === 1) {
                     $project = Project::fromCollection($projectList[0]);
                 } elseif (\count($projectList) > 1) {
@@ -142,7 +154,11 @@ trait TimesheetCommandTrait
             return $project;
         }
 
-        $projectList = $api->getGetProjects($customerId, null, '1');
+        $projectList = $api->getGetProjects(
+            $customerId,
+            null,  // @phpstan-ignore argument.type
+            '1'
+        );
 
         if (\count($projectList) === 0) {
             $io->error('Could not find any project');
@@ -206,18 +222,26 @@ trait TimesheetCommandTrait
 
     // ==============================================================================================================
 
-    private function findActivity(InputInterface $input, OutputInterface $output, SymfonyStyle $io, $activityId, ?Project $projectEntity = null): ?Activity
+    private function findActivity(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string|int|null $activityId, ?Project $projectEntity = null): ?Activity
     {
         $api = $this->getActivityApi();
         $activity = null;
         $projectId = null !== $projectEntity ? (string) $projectEntity->getId() : null;
 
         if (null !== $activityId) {
-            if (\intval($activityId)) {
+            if (is_numeric($activityId)) {
                 $activityId = \intval($activityId);
                 $activity = $this->loadActivityById($io, $activityId);
             } else {
-                $activityList = $api->getGetActivities($projectId, null, '1', null, null, null, $activityId);
+                $activityList = $api->getGetActivities(
+                    $projectId,
+                    null,  // @phpstan-ignore argument.type
+                    '1',
+                    null,
+                    null,
+                    null,
+                    $activityId
+                );
                 if (\count($activityList) === 1) {
                     $activity = Activity::fromCollection($activityList[0]);
                 } elseif (\count($activityList) > 1) {
@@ -232,7 +256,11 @@ trait TimesheetCommandTrait
             return $activity;
         }
 
-        $activityList = $api->getGetActivities($projectId, null, '1');
+        $activityList = $api->getGetActivities(
+            $projectId,
+            null,  // @phpstan-ignore argument.type
+            '1'
+        );
 
         if (\count($activityList) === 0) {
             $io->error('Could not find any activity');

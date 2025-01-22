@@ -51,8 +51,15 @@ final class ActivityListCommand extends BaseCommand
             $globals = '1';
         }
 
-        // null parameters are deprecated
-        $collection = $api->getGetActivities($project, null, $visible, $globals, $order_by, $order, $term);
+        $collection = $api->getGetActivities(
+            $project,
+            null, // @phpstan-ignore argument.type
+            $visible,
+            $globals,
+            $order_by,
+            $order,
+            $term
+        );
 
         $rows = [];
         foreach ($collection as $activity) {

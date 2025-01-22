@@ -12,25 +12,17 @@ namespace KimaiConsole\Api;
 final class Configuration
 {
     /**
-     * @var array
+     * @param array{URL: string, API_TOKEN: string, OPTIONS: array<string, mixed>} $settings
+     * @throws \Exception
      */
-    private array $settings;
-
-    public function __construct(array $settings)
+    public function __construct(private readonly array $settings)
     {
         $this->validate($settings);
-
-        $this->settings = $settings;
     }
 
-    public function getUsername(): string
+    public function getApiToken(): string
     {
-        return $this->settings['USERNAME'];
-    }
-
-    public function getApiKey(): string
-    {
-        return $this->settings['API_KEY'];
+        return $this->settings['API_TOKEN'];
     }
 
     public function getUrl(): string
@@ -38,6 +30,9 @@ final class Configuration
         return $this->settings['URL'];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCurlOptions(): array
     {
         if (!\array_key_exists('OPTIONS', $this->settings)) {
@@ -47,39 +42,43 @@ final class Configuration
         return $this->settings['OPTIONS'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function getDefaultConfiguration(): array
     {
         return [
             'URL' => 'https://demo.kimai.org/',
-            'USERNAME' => 'susan_super',
-            'API_KEY' => 'api_kitten',
+            'API_TOKEN' => 'token_super',
         ];
     }
 
     public static function getFilename(): string
     {
         if (false === ($filename = getenv('KIMAI_CONFIG'))) {
-            $filename = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai-api.json';
+            $old = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai2-console.json';
+            $new = getenv('HOME') . DIRECTORY_SEPARATOR . '.kimai-api.json';
+            if (file_exists($old)) {
+                rename($old, $new);
+            }
+            $filename = $new;
         }
 
         return $filename;
     }
 
     /**
-     * @param array $settings
-     * @return bool
+     * @param array{URL: string, API_TOKEN: string, OPTIONS: null|array<string, mixed>} $settings
      * @throws \Exception
      */
-    private function validate(array $settings)
+    private function validate(array $settings): bool
     {
-        $required = ['URL', 'USERNAME', 'API_KEY'];
+        if (!\array_key_exists('URL', $settings) || $settings['URL'] === '') {
+            throw new \Exception('Missing API URL with the key "URL"');
+        }
 
-        foreach ($required as $key) {
-            if (!\array_key_exists($key, $settings)) {
-                throw new \Exception('Missing config: ' . $key);
-            } elseif (empty($settings[$key])) {
-                throw new \Exception('Empty config: ' . $key);
-            }
+        if (!\array_key_exists('API_TOKEN', $settings) || $settings['API_TOKEN'] === '') {
+            throw new \Exception('Missing API token with the key "API_TOKEN"');
         }
 
         if (\array_key_exists('OPTIONS', $settings) && !\is_array($settings['OPTIONS'])) {

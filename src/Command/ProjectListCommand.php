@@ -50,7 +50,18 @@ final class ProjectListCommand extends BaseCommand
         $order_by = 'customer';
 
         // null parameters are deprecated
-        $collection = $api->getGetProjects($customer, null, $visible, $start, $end, $ignore_dates, $global_activities, $order, $order_by, $term);
+        $collection = $api->getGetProjects(
+            $customer,
+            null,  // @phpstan-ignore argument.type
+            $visible,
+            $start,
+            $end,
+            $ignore_dates,
+            $global_activities,
+            $order,
+            $order_by,
+            $term
+        );
 
         $rows = [];
         foreach ($collection as $project) {

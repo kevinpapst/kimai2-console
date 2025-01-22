@@ -14,35 +14,26 @@ use Swagger\Client\Model\ActivityEntity;
 
 final class Activity
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var int
-     */
-    private $projectId;
+    private ?int $id = null;
+    private ?string $name = null;
+    private ?int $projectId = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -52,7 +43,7 @@ final class Activity
         return $this->projectId;
     }
 
-    public function setProjectId(?int $projectId)
+    public function setProjectId(?int $projectId): void
     {
         $this->projectId = $projectId;
     }

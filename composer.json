@@ -15,7 +15,7 @@
         "ext-json": "*",
         "ext-curl": "*",
         "ext-mbstring": "*",
-        "kimai/api-php": "^1.0",
+        "kimai/api-php": "^2.0",
         "symfony/console": "6.*"
     },
     "require-dev": {
@@ -43,9 +43,7 @@
         }
     },
     "scripts": {
-        "phpstan": [
-            "vendor/bin/phpstan analyse src -c phpstan.neon --level=5"
-        ],
+        "phpstan": "vendor/bin/phpstan analyse src -c phpstan.neon --level=7",
         "codestyle": "vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=none",
         "codestyle-fix": "vendor/bin/php-cs-fixer fix"
     }

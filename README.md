@@ -1,10 +1,10 @@
 # Kimai - Remote Console
 
-A PHP application to access your Kimai 2 installation via its API (http).
+A PHP application to access your Kimai installation via its JSON API.
 
 **Requirements**
 
-- Kimai > v2.0.20
+- Kimai > v2.14.0
 - PHP 8.1 to 8.4
 - cURL extension
 - json extension
@@ -46,8 +46,7 @@ By default, the configuration file targets the demo installation and will work..
 but now it's time to target your own Kimai, so please edit the config file and change the settings: 
 
 - `URL`: the Kimai installation URL
-- `USERNAME`: the Kimai installation URL
-- `API_KEY`: your Kimai API key (can be set when editing your profile)
+- `API_TOKEN`: your Kimai API token (can be set when editing your profile)
 - `OPTIONS`: an array of request options for CURL (see [guzzle docs](http://docs.guzzlephp.org/en/stable/request-options.html))
 
 FAQ:
@@ -116,7 +115,7 @@ If you want to use the output in a script, instead of manually looking at them, 
 The following environment variables are supported:
 
 - `KIMAI_MEMORY_LIMIT` - configures the allowed memory limit (eg `128MB`, or `-1` for unlimited) (see [here](https://www.php.net/manual/en/ini.core.php#ini.memory-limit)) 
-- `KIMAI_CONFIG` - path to your configuration file (defaults to: $HOME/.kimai2-console.json) 
+- `KIMAI_CONFIG` - path to your configuration file (defaults to: `$HOME/.kimai-api.json`) 
 
 ## FAQ
 

@@ -14,25 +14,16 @@ use Swagger\Client\Model\ProjectEntity;
 
 final class Project
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var int
-     */
-    private $customerId;
+    private ?int $id = null;
+    private ?string $name = null;
+    private ?int $customerId = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -42,7 +33,7 @@ final class Project
         return $this->name;
     }
 
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -52,7 +43,7 @@ final class Project
         return $this->customerId;
     }
 
-    public function setCustomerId(int $customerId)
+    public function setCustomerId(int $customerId): void
     {
         $this->customerId = $customerId;
     }

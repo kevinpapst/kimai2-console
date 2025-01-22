@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Application extends SymfonyApplication
 {
-    private static $logo = ' _  _____ __  __    _    ___
+    private static string $logo = ' _  _____ __  __    _    ___
 | |/ /_ _|  \/  |  / \  |_ _|
 | \' / | || |\/| | / _ \  | |
 | . \ | || |  | |/ ___ \ | |

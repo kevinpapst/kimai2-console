@@ -10,6 +10,7 @@
 namespace KimaiConsole\Command;
 
 use KimaiConsole\Api\Configuration;
+use KimaiConsole\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -34,14 +35,19 @@ final class ConfigurationCommand extends BaseCommand
         }
 
         if (file_exists($filename)) {
+            $configFile = file_get_contents($filename);
+            if ($configFile === false) {
+                throw new InvalidConfigurationException('Failed reading configuration: ' . $filename);
+            }
+
             try {
-                $result = json_decode(file_get_contents($filename), true);
+                $result = json_decode($configFile, true);
                 $config = new Configuration($result);
 
                 $io->success(
                     'Configuration file: ' . $filename . PHP_EOL .
                     'URL: ' . $config->getUrl() . PHP_EOL .
-                    'Username: ' . $config->getUsername() . PHP_EOL
+                    'API Token: ' . $config->getApiToken() . PHP_EOL
                 );
 
                 return 0;

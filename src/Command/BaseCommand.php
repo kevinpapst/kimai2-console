@@ -28,10 +28,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 abstract class BaseCommand extends Command
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private ?Connection $connection = null;
 
     protected function getApi(): DefaultApi
     {
@@ -80,8 +77,13 @@ abstract class BaseCommand extends Command
                 throw new InvalidConfigurationException('Cannot read configuration: ' . $filename);
             }
 
+            $configFile = file_get_contents($filename);
+            if ($configFile === false) {
+                throw new InvalidConfigurationException('Failed reading configuration: ' . $filename);
+            }
+
             try {
-                $result = json_decode(file_get_contents($filename), true);
+                $result = json_decode($configFile, true);
                 $config = new Configuration($result);
             } catch (\Exception $ex) {
                 throw new InvalidConfigurationException('Invalid configuration: ' . $ex->getMessage());
@@ -97,6 +99,10 @@ abstract class BaseCommand extends Command
         return $this->connection;
     }
 
+    /**
+     * @param array<string> $headers
+     * @param list<array<int, mixed>> $rows
+     */
     protected function formatOutput(InputInterface $input, OutputInterface $output, array $headers, array $rows): void
     {
         $io = new SymfonyStyle($input, $output);

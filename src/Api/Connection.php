@@ -21,8 +21,7 @@ final class Connection
     public function __construct(Configuration $configuration)
     {
         $this->configuration = SwaggerConfiguration::getDefaultConfiguration();
-        $this->configuration->setApiKey('X-AUTH-TOKEN', $configuration->getApiKey());
-        $this->configuration->setApiKey('X-AUTH-USER', $configuration->getUsername());
+        $this->configuration->setAccessToken($configuration->getApiToken());
         $this->configuration->setHost(rtrim($configuration->getUrl(), '/'));
 
         $clientOptions = $configuration->getCurlOptions();
