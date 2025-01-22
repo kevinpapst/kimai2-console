@@ -17,8 +17,8 @@ A PHP application to access your Kimai installation via its JSON API.
 To install the Kimai console tools, execute the following commands: 
 
 ```bash
-curl -LO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar
-curl -LO https://github.com/kevinpapst/kimai2-console/releases/latest/download/kimai.phar.sha1
+curl -LO https://github.com/kimai/cli/releases/latest/download/kimai.phar
+curl -LO https://github.com/kimai/cli/releases/latest/download/kimai.phar.sha1
 sha1sum --check kimai.phar.sha1
 rm kimai.phar.sha1
 chmod +x kimai.phar
@@ -121,7 +121,7 @@ The following environment variables are supported:
 
 ### Updating the Console tools
 
-Redo the initial installation process and overwrite the file `/usr/local/bin/kimai` with the [latest release](https://github.com/kevinpapst/kimai2-console/releases).
+Redo the initial installation process and overwrite the file `/usr/local/bin/kimai` with the [latest release](https://github.com/kimai/cli/releases).
 
 ### Check the contents of the PHAR
 

@@ -1,5 +1,5 @@
 {
-    "name": "kevinpapst/kimai2-console",
+    "name": "kimai/cli",
     "license": "MIT",
     "type": "project",
     "description": "Kimai - console application to manage your time-tracking data remotely",
